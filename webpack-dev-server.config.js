@@ -3,6 +3,7 @@ var path = require('path');
 var buildPath = path.resolve(__dirname, 'build');
 var nodeModulesPath = path.resolve(__dirname, 'node_modules');
 var TransferWebpackPlugin = require('transfer-webpack-plugin');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var config = {
 
@@ -13,7 +14,7 @@ var config = {
   ],
 
   resolve: {
-    extensions: ["", ".js", ".jsx", ".css"]
+    extensions: ["", ".js", ".jsx", ".css", ".scss"]
     //node_modules: ["web_modules", "node_modules"]  (Default Settings)
   },
 
@@ -38,7 +39,9 @@ var config = {
     //Moves files
     new TransferWebpackPlugin([
       {from: 'www'}
-    ], path.resolve(__dirname, "src"))
+    ], path.resolve(__dirname, "src")),
+
+    new ExtractTextPlugin("styles.css")
   ],
   module: {
 
@@ -57,6 +60,10 @@ var config = {
         test: /\.(js|jsx)$/,
         loaders: ['react-hot', 'babel'], //react-hot is like browser sync and babel loads jsx and es6-7
         exclude: [nodeModulesPath]
+      },
+      { 
+        test: /\.scss$/, 
+        loader: ExtractTextPlugin.extract("style", "css!sass") 
       }
     ]
   },
