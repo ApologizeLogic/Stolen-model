@@ -1,0 +1,43 @@
+{
+  "name": "stolen-model",
+  "version": "1.0.0",
+  "description": "react compontent",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --config webpack-dev-server.config.js --progress --inline --colors",
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ApologizeLogic/Stolen-model.git"
+  },
+  "keywords": [
+    "react",
+    "model"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ApologizeLogic/Stolen-model/issues"
+  },
+  "homepage": "https://github.com/ApologizeLogic/Stolen-model#readme",
+  "dependencies": {
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.11.4",
+    "babel-eslint": "^6.1.2",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-runtime": "^6.9.2",
+    "eslint": "^3.1.1",
+    "eslint-loader": "^1.4.1",
+    "eslint-plugin-react": "^5.2.2",
+    "html-webpack-plugin": "^2.22.0",
+    "react-hot-loader": "^1.3.0",
+    "transfer-webpack-plugin": "^0.1.4",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1"
+  }
+}
