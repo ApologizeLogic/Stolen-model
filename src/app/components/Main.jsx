@@ -10,7 +10,7 @@ class Main extends React.Component {
 
   render() {
     return (
-      <div>Buy a apple, please</div>
+      <div>Buy a apple, please don't lie to me</div>
      );
   }
 }

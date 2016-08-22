@@ -4,7 +4,8 @@
   "description": "react compontent",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --config webpack-dev-server.config.js --progress --inline --colors"
+    "start": "webpack-dev-server --config webpack-dev-server.config.js --progress --inline --colors",
+    "node": "node serve.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
   },
   "homepage": "https://github.com/ApologizeLogic/Stolen-model#readme",
   "dependencies": {
+    "koa": "^2.0.0-alpha.5",
     "react": "^15.2.1",
     "react-dom": "^15.2.1"
   },
@@ -37,6 +39,8 @@
     "eslint-plugin-react": "^5.2.2",
     "extract-text-webpack-plugin": "^1.0.1",
     "html-webpack-plugin": "^2.22.0",
+    "koa-webpack-dev-middleware": "^1.2.2",
+    "koa-webpack-hot-middleware": "^1.0.3",
     "node-sass": "^3.8.0",
     "react-hot-loader": "^1.3.0",
     "sass-loader": "^4.0.0",
