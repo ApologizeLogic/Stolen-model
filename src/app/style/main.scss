@@ -8,6 +8,7 @@
 
 html {
   font-family: 'Roboto', sans-serif;
+  overflow: hidden;
 }
 
 body {
@@ -15,10 +16,37 @@ body {
   width: 100%;
   font-size: 13px;
   line-height: 20px;
+  overflow: hidden;
   //background: #01579B;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.bt-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  .bt-background {
+    height: 100vh;
+    width: 100%;
+  }
+
+  .bt-container {
+    position: absolute;
+    display: -webkit-flex;
+    display: flex;
+    top: 150px;
+    left: 0px;
+
+    .bt-box {
+      height: 400px;
+      margin: 0 0 0 50px;
+      width: 300px;
+      background: #01579B;
+    }
+  }
 }
