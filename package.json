@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/ApologizeLogic/Stolen-model#readme",
   "dependencies": {
+    "hammerjs": "^2.0.8",
     "koa": "^2.0.0-alpha.5",
     "react": "^15.2.1",
     "react-dom": "^15.2.1"

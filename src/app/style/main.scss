@@ -39,8 +39,9 @@ a {
     position: absolute;
     display: -webkit-flex;
     display: flex;
-    top: 150px;
+    top: 100px;
     left: 0px;
+    //transform: translate3d(0, 0, 0);
 
     .bt-box {
       height: 400px;

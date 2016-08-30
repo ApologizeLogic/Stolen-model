@@ -4,7 +4,9 @@ import ReactDOM from 'react-dom';
 import './style/main.scss';
 
 import Main from './components/Main'
+import List from './components/List'
+
 
 ReactDOM.render((
-  <Main />
+  <List />
 ), document.getElementById('app'));
