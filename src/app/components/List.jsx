@@ -10,6 +10,7 @@ let reqAnimationFrame = (function () {
 let firstTouchX = 0, 
     initialScroll = 0, 
     timeStamp = 0,
+    boxWidth = 0,
     isSwipe = false
 
 class Main extends React.Component {
@@ -31,7 +32,10 @@ class Main extends React.Component {
   }
 
   initHammer() {
-    let mc = new Hammer.Manager(this.refs.touchbody)
+    let selectBox = this.refs.touchbody
+    boxWidth = document.body.offsetWidth - selectBox.clientWidth
+    console.log(boxWidth)
+    let mc = new Hammer.Manager(selectBox)
     mc.add(new Hammer.Pan({ threshold: 0, pointers: 0 }))
     mc.add(new Hammer.Swipe({threshold: 50, velocity: 0.6})).recognizeWith(mc.get('pan'))
 
@@ -57,7 +61,7 @@ class Main extends React.Component {
     if(touchXDelta + initialScroll < 0) {
       isSwipe = false
       this.setState({
-        shortX: touchXDelta + initialScroll,
+        shortX: (touchXDelta + initialScroll) > boxWidth ? (touchXDelta + initialScroll) : boxWidth,
       })
     }
   }
@@ -72,7 +76,7 @@ class Main extends React.Component {
     let angle = ev.deltaX > 0 ? this.state.shortX + ev.deltaX * 3 : this.state.shortX + ev.deltaX * 3
     if (angle < 0) {
       this.setState({
-        shortX: angle,
+        shortX: angle > boxWidth ? angle : boxWidth,
       })
     }else {
       this.setState({
@@ -90,11 +94,11 @@ class Main extends React.Component {
     }
 
     return (
-      <div className='bt-content' ref='touchbody'>
+      <div className='bt-content'>
         <div className='bt-background'>
           
         </div>
-        <div className='bt-container' style={containerStyle}>
+        <div ref='touchbody' className='bt-container' style={containerStyle}>
           <div className='bt-box'></div>
           <div className='bt-box'></div>
           <div className='bt-box'></div>

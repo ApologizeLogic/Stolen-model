@@ -39,9 +39,17 @@ a {
     position: absolute;
     display: -webkit-flex;
     display: flex;
-    top: 100px;
+    top: 50px;
     left: 0px;
+    padding: 50px;
     //transform: translate3d(0, 0, 0);
+
+    .bt-box:first-child {
+      height: 400px;
+      margin: 0 0 0 0px;
+      width: 300px;
+      background: #01579B;
+    }
 
     .bt-box {
       height: 400px;
@@ -49,5 +57,7 @@ a {
       width: 300px;
       background: #01579B;
     }
+
+
   }
 }
