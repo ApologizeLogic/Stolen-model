@@ -28,12 +28,15 @@ a {
 .bt-content {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 100vh;
 
   .bt-background {
-    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
     width: 100%;
-    transition: background .5s ease;
+    transition: opacity 1s ease;
     -webkit-filter: blur(10px);
     filter: blur(10px);
   }
@@ -45,6 +48,7 @@ a {
     top: 50px;
     left: 0px;
     padding: 50px;
+    z-index: 9;
     //transform: translate3d(0, 0, 0);
 
     .bt-box:first-child {

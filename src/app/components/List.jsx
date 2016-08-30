@@ -116,6 +116,9 @@ class Main extends React.Component {
 
   render() {
     let imageIndex = Math.round( - this.state.shortX/350 )
+    let backgroundImageList = []
+    let boxImageList = []
+
     let containerStyle = isSwipe ? {
       transition: `all .6s cubic-bezier(0.11, 0.55, 0.58, 1)`,
       transform: `translate3d(${this.state.shortX}px, 0, 0)`,
@@ -125,28 +128,30 @@ class Main extends React.Component {
     } : {
       transform: `translate3d(${this.state.shortX}px, 0, 0)`,
     }
-    let backgroundStyle = {
-      backgroundImage: `url(${imageList[imageIndex]})`,
-      backgroundRepeat : 'no-repeat',
-      backgroundSize: 'cover',
-    }
+
+    imageList.map((val, index) => {
+      console.log(imageIndex, index)
+      let backgroundStyle = {
+        backgroundImage: `url(${val})`,
+        backgroundRepeat : 'no-repeat',
+        backgroundSize: 'cover',
+        opacity: imageIndex === index ? 1 : 0,
+      }
+      backgroundImageList.push(<div key={index} className='bt-background' style={backgroundStyle}></div>)
+
+      let boxStyle = {
+        backgroundImage: `url(${val})`,
+        backgroundPositionX: this.state.shortX / 4 + (index - 1) * 70,
+      }
+      boxImageList.push(<div key={index} className='bt-box' style={boxStyle}></div>)
+    })
 
     return (
       <div className='bt-content'>
-        <div className='bt-background' style={backgroundStyle}>
-          
-        </div>
         <div ref='touchbody' className='bt-container' style={containerStyle}>
-          {
-            imageList.map((val, index) => {
-              let boxStyle = {
-                backgroundImage: `url(${val})`,
-                backgroundPositionX: this.state.shortX / 4 + (index - 1) * 70,
-              }
-              return <div key={index} className='bt-box' style={boxStyle}></div>
-            })
-          }
+          {boxImageList}
         </div>
+        {backgroundImageList}
       </div>
     );
   }
