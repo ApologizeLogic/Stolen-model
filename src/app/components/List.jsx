@@ -124,7 +124,7 @@ class Main extends React.Component {
             imageList.map((val, index) => {
               let boxStyle = {
                 backgroundImage: `url(${val})`,
-                backgroundPositionX: '-200px',
+                backgroundPositionX: this.state.shortX / (3 * index),
               }
               return <div key={index} className='bt-box' style={boxStyle}></div>
             })
