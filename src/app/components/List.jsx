@@ -14,11 +14,18 @@ let reqAnimationFrame = (function () {
     };
 })();
 
+function patchPosition(w) {
+  return function(boxW) {
+    return Math.round(w/boxW) * boxW
+  }
+}
+
 let firstTouchX = 0, 
     initialScroll = 0, 
     timeStamp = 0,
     boxWidth = 0,
-    isSwipe = false
+    isSwipe = false,
+    isMoved = false
 
 let imageList = [
   img1,
@@ -29,6 +36,7 @@ let imageList = [
   img6,
 ]
 
+
 class Main extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -37,6 +45,7 @@ class Main extends React.Component {
     this.onPanStart = this.onPanStart.bind(this)
     this.onPanMove = this.onPanMove.bind(this)
     this.onSwipe = this.onSwipe.bind(this)
+    this.onPanEnd = this.onPanEnd.bind(this)
 
     this.state = {
       shortX : 0,
@@ -75,6 +84,7 @@ class Main extends React.Component {
 
     if(touchXDelta + initialScroll < 0) {
       isSwipe = false
+      isMoved = false
       this.setState({
         shortX: (touchXDelta + initialScroll) > boxWidth ? (touchXDelta + initialScroll) : boxWidth,
       })
@@ -83,6 +93,10 @@ class Main extends React.Component {
 
   onPanEnd(ev) {
     ev.preventDefault()
+    isMoved = true
+    this.setState({
+      shortX: patchPosition(this.state.shortX)(350),
+    })
   }
 
   onSwipe(ev) {
@@ -91,7 +105,7 @@ class Main extends React.Component {
     let angle = ev.deltaX > 0 ? this.state.shortX + ev.deltaX * 3 : this.state.shortX + ev.deltaX * 3
     if (angle < 0) {
       this.setState({
-        shortX: angle > boxWidth ? angle : boxWidth,
+        shortX: angle > boxWidth ? patchPosition(angle)(350) : boxWidth,
       })
     }else {
       this.setState({
@@ -104,6 +118,9 @@ class Main extends React.Component {
     let imageIndex = Math.round( - this.state.shortX/350 )
     let containerStyle = isSwipe ? {
       transition: `all .6s cubic-bezier(0.11, 0.55, 0.58, 1)`,
+      transform: `translate3d(${this.state.shortX}px, 0, 0)`,
+    } : isMoved ? {
+      transition: `all .2s ease`,
       transform: `translate3d(${this.state.shortX}px, 0, 0)`,
     } : {
       transform: `translate3d(${this.state.shortX}px, 0, 0)`,
@@ -124,7 +141,7 @@ class Main extends React.Component {
             imageList.map((val, index) => {
               let boxStyle = {
                 backgroundImage: `url(${val})`,
-                backgroundPositionX: this.state.shortX / (3 * index),
+                backgroundPositionX: this.state.shortX / 4 + (index - 1) * 70,
               }
               return <div key={index} className='bt-box' style={boxStyle}></div>
             })
