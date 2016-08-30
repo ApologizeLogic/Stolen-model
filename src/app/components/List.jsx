@@ -1,6 +1,13 @@
 import React from 'react'
 import Hammer from 'hammerjs'
 
+import img1 from '../images/1.jpg'
+import img2 from '../images/2.jpg'
+import img3 from '../images/3.jpg'
+import img4 from '../images/4.jpg'
+import img5 from '../images/5.jpg'
+import img6 from '../images/6.jpg'
+
 let reqAnimationFrame = (function () {
     return window[Hammer.prefixed(window, 'requestAnimationFrame')] || function (callback) {
         window.setTimeout(callback, 1000 / 60);
@@ -12,6 +19,15 @@ let firstTouchX = 0,
     timeStamp = 0,
     boxWidth = 0,
     isSwipe = false
+
+let imageList = [
+  img1,
+  img2,
+  img3,
+  img4,
+  img5,
+  img6,
+]
 
 class Main extends React.Component {
   constructor(props, context) {
@@ -34,15 +50,14 @@ class Main extends React.Component {
   initHammer() {
     let selectBox = this.refs.touchbody
     boxWidth = document.body.offsetWidth - selectBox.clientWidth
-    console.log(boxWidth)
     let mc = new Hammer.Manager(selectBox)
     mc.add(new Hammer.Pan({ threshold: 0, pointers: 0 }))
     mc.add(new Hammer.Swipe({threshold: 50, velocity: 0.6})).recognizeWith(mc.get('pan'))
 
-    mc.on("panstart", this.onPanStart);
-    mc.on("panmove", this.onPanMove);
-    mc.on("panend", this.onPanEnd);
-    mc.on("swipe", this.onSwipe);
+    mc.on("panstart", this.onPanStart)
+    mc.on("panmove", this.onPanMove)
+    mc.on("panend", this.onPanEnd)
+    mc.on("swipe", this.onSwipe)
 
   }
 
@@ -86,22 +101,34 @@ class Main extends React.Component {
   }
 
   render() {
+    let imageIndex = Math.round( - this.state.shortX/350 )
     let containerStyle = isSwipe ? {
       transition: `all .6s cubic-bezier(0.11, 0.55, 0.58, 1)`,
       transform: `translate3d(${this.state.shortX}px, 0, 0)`,
     } : {
       transform: `translate3d(${this.state.shortX}px, 0, 0)`,
     }
+    let backgroundStyle = {
+      backgroundImage: `url(${imageList[imageIndex]})`,
+      backgroundRepeat : 'no-repeat',
+      backgroundSize: 'cover',
+    }
 
     return (
       <div className='bt-content'>
-        <div className='bt-background'>
+        <div className='bt-background' style={backgroundStyle}>
           
         </div>
         <div ref='touchbody' className='bt-container' style={containerStyle}>
-          <div className='bt-box'></div>
-          <div className='bt-box'></div>
-          <div className='bt-box'></div>
+          {
+            imageList.map((val, index) => {
+              let boxStyle = {
+                backgroundImage: `url(${val})`,
+                backgroundPositionX: '-200px',
+              }
+              return <div key={index} className='bt-box' style={boxStyle}></div>
+            })
+          }
         </div>
       </div>
     );
