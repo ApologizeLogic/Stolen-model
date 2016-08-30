@@ -1,6 +1,11 @@
 import React from 'react';
 
-let firstTouchX, initialScroll, shareWrapH
+let firstTouchX, initialScroll
+let isSwipe = true
+let swipeRule = {
+  moveLength: 150,
+  moveTime: 200,
+}
 
 function throttle(fn, delay) {
   let allowSample = true;
@@ -40,10 +45,15 @@ class Main extends React.Component {
   }
 
   touchStart(ev) {
-    let touchobj = ev.changedTouches[0]
+    isSwipe = true
 
+    let touchobj = ev.changedTouches[0]
     firstTouchX = parseInt(touchobj.clientX);
     initialScroll = this.state.shortX
+
+    setTimeout(()=>{
+      isSwipe = false
+    }, swipeRule.moveTime)
   }
 
   touchMove(ev) {
@@ -60,11 +70,21 @@ class Main extends React.Component {
 
     }
 
-    throttle(moving(), 60)
+    throttle(moving(), 30)
   }
 
-  touchEnd() {
+  touchEnd(ev) {
+    let touchobj = ev.changedTouches[0]
+    let touchX = parseInt(touchobj.clientX)
+    let touchXDelta = touchX - firstTouchX
+
+    if(isSwipe && Math.abs(touchXDelta) > swipeRule.moveLength) {
+      console.log(touchXDelta)
+      alert('is Swiper!')
+    }
+
     initialScroll = 0
+
   }
 
   render() {
