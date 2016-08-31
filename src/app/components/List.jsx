@@ -8,25 +8,6 @@ import img4 from '../images/4.jpg'
 import img5 from '../images/5.jpg'
 import img6 from '../images/6.jpg'
 
-let reqAnimationFrame = (function () {
-    return window[Hammer.prefixed(window, 'requestAnimationFrame')] || function (callback) {
-        window.setTimeout(callback, 1000 / 60);
-    };
-})();
-
-function patchPosition(w) {
-  return function(boxW) {
-    return Math.round(w/boxW) * boxW
-  }
-}
-
-let firstTouchX = 0, 
-    initialScroll = 0, 
-    timeStamp = 0,
-    boxWidth = 0,
-    isSwipe = false,
-    isMoved = false
-
 let imageList = [
   img1,
   img2,
@@ -36,6 +17,22 @@ let imageList = [
   img6,
 ]
 
+let reqAnimationFrame = (function () {
+    return window[Hammer.prefixed(window, 'requestAnimationFrame')] || function (callback) {
+        window.setTimeout(callback, 1000 / 60);
+    };
+})();
+
+function patchPosition(w, boxW) {
+  return Math.round(w/boxW) * boxW
+}
+
+let firstTouchX = 0, 
+    initialScroll = 0, 
+    timeStamp = 0,
+    boxWidth = 0,
+    isSwipe = false,
+    isMoved = false
 
 class Main extends React.Component {
   constructor(props, context) {
@@ -95,7 +92,7 @@ class Main extends React.Component {
     ev.preventDefault()
     isMoved = true
     this.setState({
-      shortX: patchPosition(this.state.shortX)(350),
+      shortX: patchPosition(this.state.shortX, 350),
     })
   }
 
@@ -105,7 +102,7 @@ class Main extends React.Component {
     let angle = ev.deltaX > 0 ? this.state.shortX + ev.deltaX * 3 : this.state.shortX + ev.deltaX * 3
     if (angle < 0) {
       this.setState({
-        shortX: angle > boxWidth ? patchPosition(angle)(350) : boxWidth,
+        shortX: angle > boxWidth ? patchPosition(angle, 350) : boxWidth,
       })
     }else {
       this.setState({
@@ -130,7 +127,6 @@ class Main extends React.Component {
     }
 
     imageList.map((val, index) => {
-      console.log(imageIndex, index)
       let backgroundStyle = {
         backgroundImage: `url(${val})`,
         backgroundRepeat : 'no-repeat',
