@@ -127,19 +127,29 @@ class Main extends React.Component {
     }
 
     imageList.map((val, index) => {
+
       let backgroundStyle = {
         backgroundImage: `url(${val})`,
         backgroundRepeat : 'no-repeat',
         backgroundSize: 'cover',
         opacity: imageIndex === index ? 1 : 0,
       }
-      backgroundImageList.push(<div key={index} className='bt-background' style={backgroundStyle}></div>)
+
+      backgroundImageList.push(
+        <div key={index} className='bt-background' style={backgroundStyle}></div>
+      )
 
       let boxStyle = {
         backgroundImage: `url(${val})`,
         backgroundPositionX: this.state.shortX / 4 + (index - 1) * 70,
       }
-      boxImageList.push(<div key={index} className='bt-box' style={boxStyle}></div>)
+      
+      boxImageList.push(
+        <div key={index} className='bt-box'>
+          <div className='bt-box-banner' style={boxStyle}></div>
+          <div className='bt-box-content'></div>
+        </div>
+      )
     })
 
     return (

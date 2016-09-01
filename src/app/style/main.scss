@@ -4,6 +4,7 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
+  box-sizing: border-box;
 }
 
 html {
@@ -52,10 +53,9 @@ a {
     //transform: translate3d(0, 0, 0);
 
     .bt-box:first-child {
-      height: 400px;
+      padding: 1px;
       margin: 0 0 0 0px;
       width: 300px;
-      background: #01579B;
       background-size: cover;
       background-repeat: no-repeat;
       border-radius: 5px;
@@ -63,14 +63,31 @@ a {
     }
 
     .bt-box {
-      height: 400px;
+      padding: 1px;
       margin: 0 0 0 50px;
       width: 300px;
-      background: #01579B;
-      background-size: cover;
-      background-repeat: no-repeat;
+      background: rgba(255, 255, 255, 0);
       border-radius: 5px;
       box-shadow: 0 29px 32px -20px rgba(0,0,0,0.5),0 4px 11px -3px rgba(0,0,0,0.25);
+
+      .bt-box-banner {
+        height: 320px;
+        width: 100%;
+        background: #01579B;
+        background-size: cover;
+        background-repeat: no-repeat;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+      }
+
+      .bt-box-content {
+        height: 140px;
+        width: 100%;
+        background: #fff;
+        padding: 5px;
+        border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
+      }
     }
 
 
