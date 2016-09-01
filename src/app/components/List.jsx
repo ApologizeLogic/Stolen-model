@@ -1,6 +1,8 @@
 import React from 'react'
 import Hammer from 'hammerjs'
 
+import TransitionEnd from '../utils/transitionEnd'
+
 import img1 from '../images/1.jpg'
 import img2 from '../images/2.jpg'
 import img3 from '../images/3.jpg'
@@ -178,12 +180,12 @@ class Main extends React.Component {
       coverContentStyle: contantStyle,
     })
 
-    setTimeout(()=>{
+    TransitionEnd(this.refs.coverBanner,()=>{
       this.setState({
         showCover: false,
         coverClass: 'bt-cover',
       })
-    }, 500)
+    })
   }
 
   render() {
@@ -229,7 +231,7 @@ class Main extends React.Component {
 
     let cover = this.state.showCover ? (
       <div onClick={this.closeCover}>
-        <div className='bt-cover-banner' style={this.state.coverBannerStyle}></div>
+        <div className='bt-cover-banner' ref='coverBanner' style={this.state.coverBannerStyle}></div>
         <div className='bt-cover-content' style={this.state.coverContentStyle}></div>
       </div>
     ) : null
