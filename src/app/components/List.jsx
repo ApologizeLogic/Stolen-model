@@ -32,7 +32,11 @@ let firstTouchX = 0,
     timeStamp = 0,
     boxWidth = 0,
     isSwipe = false,
-    isMoved = false
+    isMoved = false,
+    bannerStyle = {},
+    contantStyle = {},
+    winHeight = 0,
+    winWidth = 0
 
 class Main extends React.Component {
   constructor(props, context) {
@@ -44,12 +48,22 @@ class Main extends React.Component {
     this.onSwipe = this.onSwipe.bind(this)
     this.onPanEnd = this.onPanEnd.bind(this)
 
+    this.cloneBox = this.cloneBox.bind(this)
+    this.closeCover = this.closeCover.bind(this)
+
     this.state = {
       shortX : 0,
+      coverEle: null,
+      coverBannerStyle: null,
+      coverContentStyle: null,
+      showCover: false,
+      coverClass: 'bt-cover',
     }
   }
 
   componentDidMount() {
+    winHeight = window.innerHeight;
+    winWidth = window.innerWidth;
     this.initHammer()
   }
 
@@ -111,6 +125,67 @@ class Main extends React.Component {
     }
   }
 
+  cloneBox(e, style) {
+    //let p = e.target.parentElement.cloneNode(true)
+    //console.log(arguments)
+    let cle = e.target.parentElement
+    let banner = cle.children[0].getBoundingClientRect()
+    let contant = cle.children[1].getBoundingClientRect()
+    bannerStyle = Object.assign({
+      width: banner.width,
+      height: banner.height,
+      top: banner.top,
+      left: banner.left,
+    }, style)
+    contantStyle = {
+      width: contant.width,
+      height: contant.height,
+      top: contant.top,
+      left: contant.left,
+    }
+
+    this.setState({
+      showCover: true,
+      coverBannerStyle: bannerStyle,
+      coverContentStyle: contantStyle,
+    })
+
+    let newBannerStyle = Object.assign({
+      width: winWidth,
+      height: banner.height,
+      top: 0,
+      left: 0,
+    }, style)
+    let newContantStyle = {
+      width: winWidth,
+      height: winHeight - banner.height,
+      top: contant.top - banner.top,
+      left: 0,
+    }
+
+    setTimeout(()=>{
+      this.setState({
+        coverClass: 'bt-cover bt-event',
+        coverBannerStyle: newBannerStyle,
+        coverContentStyle: newContantStyle,
+      })
+    }, 100)
+  }
+
+  closeCover() {
+    this.setState({
+      coverBannerStyle: bannerStyle,
+      coverContentStyle: contantStyle,
+    })
+
+    setTimeout(()=>{
+      this.setState({
+        showCover: false,
+        coverClass: 'bt-cover',
+      })
+    }, 500)
+  }
+
   render() {
     let imageIndex = Math.round( - this.state.shortX/350 )
     let backgroundImageList = []
@@ -143,14 +218,21 @@ class Main extends React.Component {
         backgroundImage: `url(${val})`,
         backgroundPositionX: this.state.shortX / 4 + (index - 1) * 70,
       }
-      
+
       boxImageList.push(
-        <div key={index} className='bt-box'>
+        <div key={index} className='bt-box' onClick={(e) => this.cloneBox(e, boxStyle)}>
           <div className='bt-box-banner' style={boxStyle}></div>
           <div className='bt-box-content'></div>
         </div>
       )
     })
+
+    let cover = this.state.showCover ? (
+      <div onClick={this.closeCover}>
+        <div className='bt-cover-banner' style={this.state.coverBannerStyle}></div>
+        <div className='bt-cover-content' style={this.state.coverContentStyle}></div>
+      </div>
+    ) : null
 
     return (
       <div className='bt-content'>
@@ -158,6 +240,9 @@ class Main extends React.Component {
           {boxImageList}
         </div>
         {backgroundImageList}
+        <div className={this.state.coverClass}>
+          {cover}
+        </div>
       </div>
     );
   }
