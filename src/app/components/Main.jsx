@@ -34,7 +34,7 @@ let firstTouchX = 0,
     }
 
 function patchPosition(w, boxW) {
-  return Math.round(w/boxW) * boxW
+  return Math.ceil(w/boxW) * boxW
 }
 
 function throttle(fn, delay) {
@@ -118,7 +118,7 @@ class Main extends React.Component {
 
     if(elapsedTime <= swipeRule.moveTime && Math.abs(touchXDelta) >= swipeRule.moveLength) {
       isSwipe = true
-      let angle = initialScroll + touchXDelta/elapsedTime * 300
+      let angle = initialScroll + Math.ceil(touchXDelta/elapsedTime) * 500
       if (angle < 0) {
         this.setState({
           shortX: angle > boxWidth ? patchPosition(angle, 350) : boxWidth,
