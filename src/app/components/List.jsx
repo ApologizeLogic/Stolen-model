@@ -1,6 +1,7 @@
 import React from 'react'
 import Hammer from 'hammerjs'
 
+import '../style/main.scss';
 import TransitionEnd from '../utils/transitionEnd'
 
 import img1 from '../images/1.jpg'
@@ -171,7 +172,7 @@ class Main extends React.Component {
         coverBannerStyle: newBannerStyle,
         coverContentStyle: newContantStyle,
       })
-    }, 100)
+    }, 50)
   }
 
   closeCover() {

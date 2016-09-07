@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import './style/main.scss';
-
 import Main from './components/Main'
 import List from './components/List'
+import Scroll from './components/Scroller'
 
 
 ReactDOM.render((
-  <List />
+  <Main />
 ), document.getElementById('app'));

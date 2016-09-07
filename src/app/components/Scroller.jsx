@@ -1,18 +1,11 @@
 import React from 'react';
 
-import '../style/main.scss';
+import '../style/scroller.scss'
+//import '../lib/Animate.js'
 
-import TransitionEnd from '../utils/transitionEnd'
+import Scroller from '../lib/Scroller.js'
 
-let firstTouchX, 
-    initialScroll,
-    startTime,
-    endTime,
-    isSwipe = false
-let swipeRule = {
-  moveLength: 150,
-  moveTime: 300,
-}
+let firstTouchX, initialScroll
 
 function throttle(fn, delay) {
   let allowSample = true;
@@ -52,17 +45,14 @@ class Main extends React.Component {
   }
 
   touchStart(ev) {
-    ev.preventDefault()
 
     let touchobj = ev.changedTouches[0]
     firstTouchX = parseInt(touchobj.clientX);
     initialScroll = this.state.shortX
 
-    startTime = new Date().getTime()
   }
 
   touchMove(ev) {
-    ev.preventDefault()
     let moving = () => {
       let touchobj = ev.changedTouches[0]
       let touchX = parseInt(touchobj.clientX)
@@ -80,34 +70,15 @@ class Main extends React.Component {
   }
 
   touchEnd(ev) {
-    ev.preventDefault()
     let touchobj = ev.changedTouches[0]
     let touchX = parseInt(touchobj.clientX)
     let touchXDelta = touchX - firstTouchX
-
-    let elapsedTime = new Date().getTime() - startTime
-
-    if(elapsedTime <= swipeRule.moveTime && Math.abs(touchXDelta) >= swipeRule.moveLength) {
-      isSwipe = true
-      this.setState({
-        shortX: initialScroll + touchXDelta/elapsedTime * 300
-      })
-
-      TransitionEnd(this.refs.container,()=>{
-        isSwipe = false
-      })
-
-    }
-
     initialScroll = 0
 
   }
 
   render() {
-    let containerStyle = isSwipe ? {
-      transition: `all .8s cubic-bezier(0.11, 0.55, 0.58, 1)`,
-      transform: `translate3d(${this.state.shortX}px, 0, 0)`,
-    } : {
+    let containerStyle = {
       transform: `translateX(${this.state.shortX}px)`,
     }
 
@@ -116,7 +87,7 @@ class Main extends React.Component {
         <div className='bt-background'>
           
         </div>
-        <div className='bt-container' ref='container' style={containerStyle}>
+        <div className='bt-container' style={containerStyle}>
           <div className='bt-box'></div>
           <div className='bt-box'></div>
           <div className='bt-box'></div>

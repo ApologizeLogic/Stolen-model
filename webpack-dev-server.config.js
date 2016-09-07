@@ -44,16 +44,6 @@ var config = {
     new ExtractTextPlugin("styles.css")
   ],
   module: {
-
-    preLoaders: [
-      {
-        //Eslint loader
-        test: /\.(js|jsx)$/,
-        loader: 'eslint-loader',
-        include: [path.resolve(__dirname, "src/app")],
-        exclude: [nodeModulesPath]
-      },
-    ],
     loaders: [
       {
         //React-hot loader and
@@ -67,11 +57,7 @@ var config = {
       },
       { test: /\.(jpe?g|svg|jpg)$/, loader: "file-loader" }
     ]
-  },
-
-  eslint: {
-    configFile: '.eslintrc'
-  },
+  }
 };
 
 module.exports = config;
