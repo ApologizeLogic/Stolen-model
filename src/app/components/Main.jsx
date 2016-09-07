@@ -25,6 +25,8 @@ let firstTouchX = 0,
     endTime = 0,
     isSwipe = false,
     isMoved = false,
+    bannerStyle = {},
+    contantStyle = {},
     winHeight = 0,
     winWidth = 0,
     boxWidth = 0,
@@ -33,8 +35,14 @@ let firstTouchX = 0,
       moveTime: 300,
     }
 
-function patchPosition(w, boxW) {
-  return Math.ceil(w/boxW) * boxW
+function patchPosition(w, boxW, delta) {
+  let bw = w/boxW
+  // 判断向左和向右移动
+  if (delta > 0) {
+    return Math.ceil(bw) * boxW
+  } else {
+    return Math.ceil(bw * -1) * boxW * -1
+  }
 }
 
 function throttle(fn, delay) {
@@ -53,13 +61,21 @@ class Main extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    this.addListener = this.addListener.bind(this);
-    this._touchStart = this.touchStart.bind(this);
-    this._touchMove = this.touchMove.bind(this);
-    this._touchEnd = this.touchEnd.bind(this);
+    this.addListener = this.addListener.bind(this)
+    this._touchStart = this.touchStart.bind(this)
+    this._touchMove = this.touchMove.bind(this)
+    this._touchEnd = this.touchEnd.bind(this)
+
+    this.cloneBox = this.cloneBox.bind(this)
+    this.closeCover = this.closeCover.bind(this)
 
     this.state = {
       shortX : 0,
+      coverEle: null,
+      coverBannerStyle: null,
+      coverContentStyle: null,
+      showCover: false,
+      coverClass: 'bt-cover',
     }
   }
 
@@ -71,7 +87,7 @@ class Main extends React.Component {
 
   addListener() {
     let touchBody = this.refs.touchbody
-    // boxWidth = winWidth - touchBody.clientWidth
+    // boxWidth = document.body.offsetWidth - touchBody.clientWidth
     boxWidth = winWidth - touchBody.clientWidth
     touchBody.addEventListener('touchstart', this._touchStart)
     touchBody.addEventListener('touchmove', this._touchMove)
@@ -79,7 +95,7 @@ class Main extends React.Component {
   }
 
   touchStart(ev) {
-    ev.preventDefault()
+    //ev.preventDefault()
 
     let touchobj = ev.changedTouches[0]
     firstTouchX = touchobj.clientX
@@ -109,7 +125,7 @@ class Main extends React.Component {
   }
 
   touchEnd(ev) {
-    ev.preventDefault()
+    //ev.preventDefault()
     let touchobj = ev.changedTouches[0]
     let touchX = touchobj.clientX
     let touchXDelta = touchX - firstTouchX
@@ -136,12 +152,73 @@ class Main extends React.Component {
     } else {
       isMoved = true
       this.setState({
-        shortX: patchPosition(this.state.shortX, 350),
+        shortX: patchPosition(this.state.shortX, 350, touchXDelta),
       })
     }
 
     initialScroll = 0
 
+  }
+
+  cloneBox(e, style) {
+    //let p = e.target.parentElement.cloneNode(true)
+    //console.log(arguments)
+    let cle = e.target.parentElement
+    let banner = cle.children[0].getBoundingClientRect()
+    let contant = cle.children[1].getBoundingClientRect()
+    bannerStyle = Object.assign({
+      width: banner.width,
+      height: banner.height,
+      top: banner.top,
+      left: banner.left,
+    }, style)
+    contantStyle = {
+      width: contant.width,
+      height: contant.height,
+      top: contant.top,
+      left: contant.left,
+    }
+
+    this.setState({
+      showCover: true,
+      coverBannerStyle: bannerStyle,
+      coverContentStyle: contantStyle,
+    })
+
+    let newBannerStyle = Object.assign({
+      width: winWidth,
+      height: banner.height,
+      top: 0,
+      left: 0,
+    }, style)
+    let newContantStyle = {
+      width: winWidth,
+      height: winHeight - banner.height,
+      top: contant.top - banner.top,
+      left: 0,
+    }
+
+    setTimeout(()=>{
+      this.setState({
+        coverClass: 'bt-cover bt-event',
+        coverBannerStyle: newBannerStyle,
+        coverContentStyle: newContantStyle,
+      })
+    }, 60)
+  }
+
+  closeCover() {
+    this.setState({
+      coverBannerStyle: bannerStyle,
+      coverContentStyle: contantStyle,
+    })
+
+    TransitionEnd(this.refs.coverBanner,()=>{
+      this.setState({
+        showCover: false,
+        coverClass: 'bt-cover',
+      })
+    })
   }
 
   render() {
@@ -178,12 +255,21 @@ class Main extends React.Component {
       }
 
       boxImageList.push(
-        <div key={index} className='bt-box' onClick={(e) => this.cloneBox(e, boxStyle)}>
+        <div key={index} className='bt-box' onClick={(e) => {
+          this.cloneBox(e, boxStyle)
+        } }>
           <div className='bt-box-banner' style={boxStyle}></div>
           <div className='bt-box-content'></div>
         </div>
       )
     })
+
+    let cover = this.state.showCover ? (
+      <div onClick={this.closeCover}>
+        <div className='bt-cover-banner' ref='coverBanner' style={this.state.coverBannerStyle}></div>
+        <div className='bt-cover-content' style={this.state.coverContentStyle}></div>
+      </div>
+    ) : null
 
     return (
       <div className='bt-content'>
@@ -191,6 +277,9 @@ class Main extends React.Component {
           {boxImageList}
         </div>
         {backgroundImageList}
+        <div className={this.state.coverClass}>
+          {cover}
+        </div>
       </div>
     );
   }

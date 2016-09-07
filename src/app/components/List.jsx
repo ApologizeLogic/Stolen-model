@@ -41,7 +41,7 @@ let firstTouchX = 0,
     winHeight = 0,
     winWidth = 0
 
-class Main extends React.Component {
+class List extends React.Component {
   constructor(props, context) {
     super(props, context);
 
@@ -251,4 +251,4 @@ class Main extends React.Component {
   }
 }
 
-export default Main;
+export default List;
