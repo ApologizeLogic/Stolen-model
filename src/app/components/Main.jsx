@@ -71,7 +71,8 @@ class Main extends React.Component {
 
   addListener() {
     let touchBody = this.refs.touchbody
-    boxWidth = document.body.offsetWidth - touchBody.clientWidth
+    // boxWidth = winWidth - touchBody.clientWidth
+    boxWidth = winWidth - touchBody.clientWidth
     touchBody.addEventListener('touchstart', this._touchStart)
     touchBody.addEventListener('touchmove', this._touchMove)
     touchBody.addEventListener('touchend', this._touchEnd)
@@ -117,9 +118,16 @@ class Main extends React.Component {
 
     if(elapsedTime <= swipeRule.moveTime && Math.abs(touchXDelta) >= swipeRule.moveLength) {
       isSwipe = true
-      this.setState({
-        shortX: initialScroll + touchXDelta/elapsedTime * 300 < 0 ? initialScroll + touchXDelta/elapsedTime * 300 : 0
-      })
+      let angle = initialScroll + touchXDelta/elapsedTime * 300
+      if (angle < 0) {
+        this.setState({
+          shortX: angle > boxWidth ? patchPosition(angle, 350) : boxWidth,
+        })
+      } else {
+        this.setState({
+          shortX: 0,
+        })
+      }
 
       TransitionEnd(this.refs.touchbody,()=>{
         isSwipe = false

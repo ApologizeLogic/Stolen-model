@@ -66,7 +66,7 @@ a {
       padding: 1px;
       margin: 0 0 0 50px;
       width: 300px;
-      background: rgba(255, 255, 255, 0);
+      background-color: rgba(255, 255, 255, 0);
       border-radius: 5px;
       box-shadow: 0 29px 32px -20px rgba(0,0,0,0.5),0 4px 11px -3px rgba(0,0,0,0.25);
       cursor: pointer;
@@ -74,7 +74,6 @@ a {
       .bt-box-banner {
         height: 320px;
         width: 100%;
-        background: #01579B;
         background-size: cover;
         background-repeat: no-repeat;
         border-top-left-radius: 3px;
