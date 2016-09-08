@@ -105,7 +105,7 @@ class Main extends React.Component {
   }
 
   touchMove(ev) {
-    ev.preventDefault()
+    //ev.preventDefault()
     let moving = () => {
       let touchobj = ev.changedTouches[0]
       let touchX = touchobj.clientX
@@ -161,8 +161,7 @@ class Main extends React.Component {
   }
 
   cloneBox(e, style) {
-    //let p = e.target.parentElement.cloneNode(true)
-    //console.log(arguments)
+    e.preventDefault()
     let cle = e.target.parentElement
     let banner = cle.children[0].getBoundingClientRect()
     let contant = cle.children[1].getBoundingClientRect()
@@ -255,9 +254,7 @@ class Main extends React.Component {
       }
 
       boxImageList.push(
-        <div key={index} className='bt-box' onClick={(e) => {
-          this.cloneBox(e, boxStyle)
-        } }>
+        <div key={index} className='bt-box' onClick={(e) => this.cloneBox(e, boxStyle)}>
           <div className='bt-box-banner' style={boxStyle}></div>
           <div className='bt-box-content'></div>
         </div>
