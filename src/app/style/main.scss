@@ -40,6 +40,14 @@ a {
     transition: opacity 1s ease;
     -webkit-filter: blur(10px);
     filter: blur(10px);
+
+    &::before {
+      content: "";
+      display: block;
+      background-color: rgba(0, 0, 0, 0.2);
+      height: 100%;
+      width: 100%;
+    }
   }
 
   .bt-container {
@@ -115,7 +123,7 @@ a {
     .bt-cover-content {
       position: absolute;
       height: 140px;
-      width: 300px;
+      width: 298px;
       will-change: width, height, left, top;
       transition: all .5s ease;
       background: #fff;

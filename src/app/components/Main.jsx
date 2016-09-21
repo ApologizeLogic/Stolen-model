@@ -105,7 +105,7 @@ class Main extends React.Component {
   }
 
   touchMove(ev) {
-    //ev.preventDefault()
+    ev.preventDefault()
     let moving = () => {
       let touchobj = ev.changedTouches[0]
       let touchX = touchobj.clientX
@@ -229,7 +229,7 @@ class Main extends React.Component {
       transition: `all .8s cubic-bezier(0.11, 0.55, 0.58, 1)`,
       transform: `translate3d(${this.state.shortX}px, 0, 0)`,
     } : isMoved ? {
-      transition: `all .5s ease`,
+      transition: `all .6s ease`,
       transform: `translate3d(${this.state.shortX}px, 0, 0)`,
     } : {
       transform: `translate3d(${this.state.shortX}px, 0, 0)`,
@@ -250,7 +250,7 @@ class Main extends React.Component {
 
       let boxStyle = {
         backgroundImage: `url(${val})`,
-        backgroundPositionX: this.state.shortX / 4 + (index - 1) * 70,
+        //backgroundPositionX: this.state.shortX / 4 + (index - 1) * 70,
       }
 
       boxImageList.push(
