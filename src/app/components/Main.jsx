@@ -1,4 +1,5 @@
 import React from 'react';
+import { spring, Motion, presets } from 'react-motion';
 
 import '../style/main.scss';
 import TransitionEnd from '../utils/transitionEnd'
@@ -76,6 +77,7 @@ class Main extends React.Component {
       coverContentStyle: null,
       showCover: false,
       coverClass: 'bt-cover',
+      boxBackgroundImageStyle: null,
     }
   }
 
@@ -165,36 +167,37 @@ class Main extends React.Component {
     let cle = e.target.parentElement
     let banner = cle.children[0].getBoundingClientRect()
     let contant = cle.children[1].getBoundingClientRect()
-    bannerStyle = Object.assign({
-      width: banner.width,
-      height: banner.height,
-      top: banner.top,
-      left: banner.left,
-    }, style)
+    bannerStyle = {
+      width: spring(banner.width),
+      height: spring(banner.height),
+      top: spring(banner.top),
+      left: spring(banner.left),
+    }
     contantStyle = {
-      width: contant.width,
-      height: contant.height,
-      top: contant.top,
-      left: contant.left,
+      width: spring(contant.width),
+      height: spring(contant.height),
+      top: spring(contant.top),
+      left: spring(contant.left),
     }
 
     this.setState({
       showCover: true,
       coverBannerStyle: bannerStyle,
       coverContentStyle: contantStyle,
+      boxBackgroundImageStyle: style,
     })
 
-    let newBannerStyle = Object.assign({
-      width: winWidth,
-      height: banner.height,
-      top: 0,
-      left: 0,
-    }, style)
+    let newBannerStyle = {
+      width: spring(winWidth),
+      height: spring(banner.height),
+      top: spring(0),
+      left: spring(0),
+    }
     let newContantStyle = {
-      width: winWidth,
-      height: winHeight - banner.height,
-      top: contant.top - banner.top,
-      left: 0,
+      width: spring(winWidth),
+      height: spring(winHeight - banner.height),
+      top: spring(contant.top - banner.top),
+      left: spring(0),
     }
 
     setTimeout(()=>{
@@ -212,12 +215,19 @@ class Main extends React.Component {
       coverContentStyle: contantStyle,
     })
 
-    TransitionEnd(this.refs.coverBanner,()=>{
+    setTimeout(()=>{
       this.setState({
         showCover: false,
         coverClass: 'bt-cover',
       })
-    })
+    }, 600)
+
+    // TransitionEnd(this.refs.coverBanner,()=>{
+    //   this.setState({
+    //     showCover: false,
+    //     coverClass: 'bt-cover',
+    //   })
+    // })
   }
 
   render() {
@@ -263,8 +273,16 @@ class Main extends React.Component {
 
     let cover = this.state.showCover ? (
       <div onClick={this.closeCover}>
-        <div className='bt-cover-banner' ref='coverBanner' style={this.state.coverBannerStyle}></div>
-        <div className='bt-cover-content' style={this.state.coverContentStyle}></div>
+        <Motion style={this.state.coverBannerStyle}>
+          { 
+            interpolatingStyle => <div className='bt-cover-banner' ref='coverBanner' style={Object.assign(interpolatingStyle, this.state.boxBackgroundImageStyle)}></div>
+          }
+        </Motion>
+        <Motion style={this.state.coverContentStyle}>
+          {
+            interpolatingStyle => <div className='bt-cover-content' style={interpolatingStyle}></div>
+          }
+        </Motion>
       </div>
     ) : null
 

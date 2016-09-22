@@ -114,8 +114,8 @@ a {
       height: 320px;
       width: 300px;
       position: absolute;
-      will-change: width, height, left, top;
-      transition: all .5s ease;
+      //will-change: width, height, left, top;
+      //transition: all .5s ease;
       background-size: cover;
       background-repeat: no-repeat;
     }
@@ -124,8 +124,8 @@ a {
       position: absolute;
       height: 140px;
       width: 298px;
-      will-change: width, height, left, top;
-      transition: all .5s ease;
+      //will-change: width, height, left, top;
+      //transition: all .5s ease;
       background: #fff;
     }
   }
