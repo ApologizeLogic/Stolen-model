@@ -11,7 +11,8 @@ import img4 from '../images/4.jpg'
 import img5 from '../images/5.jpg'
 import img6 from '../images/6.jpg'
 
-let imageList = [
+const springConfig = {stiffness: 300, damping: 50}
+const imageList = [
   img1,
   img2,
   img3,
@@ -88,7 +89,8 @@ class Main extends React.Component {
   }
 
   addListener() {
-    let touchBody = this.refs.touchbody
+    //let touchBody = this.refs.touchbody
+    let touchBody = document.getElementById('touchbody')
     // boxWidth = document.body.offsetWidth - touchBody.clientWidth
     boxWidth = winWidth - touchBody.clientWidth
     touchBody.addEventListener('touchstart', this._touchStart)
@@ -147,9 +149,9 @@ class Main extends React.Component {
         })
       }
 
-      TransitionEnd(this.refs.touchbody,()=>{
-        isSwipe = false
-      })
+      // TransitionEnd(this.refs.touchbody,()=>{
+      //   isSwipe = false
+      // })
 
     } else {
       isMoved = true
@@ -235,15 +237,15 @@ class Main extends React.Component {
     let backgroundImageList = []
     let boxImageList = []
 
-    let containerStyle = isSwipe ? {
-      transition: `all .8s cubic-bezier(0.11, 0.55, 0.58, 1)`,
-      transform: `translate3d(${this.state.shortX}px, 0, 0)`,
-    } : isMoved ? {
-      transition: `all .6s ease`,
-      transform: `translate3d(${this.state.shortX}px, 0, 0)`,
-    } : {
-      transform: `translate3d(${this.state.shortX}px, 0, 0)`,
-    }
+    // let containerStyle = isSwipe ? {
+    //   transition: `all .8s cubic-bezier(0.11, 0.55, 0.58, 1)`,
+    //   transform: `translate3d(${shortX}px, 0, 0)`,
+    // } : isMoved ? {
+    //   transition: `all .6s ease`,
+    //   transform: `translate3d(${shortX}px, 0, 0)`,
+    // } : {
+    //   transform: `translate3d(${shortX}px, 0, 0)`,
+    // }
 
     imageList.map((val, index) => {
 
@@ -288,9 +290,18 @@ class Main extends React.Component {
 
     return (
       <div className='bt-content'>
-        <div ref='touchbody' className='bt-container' style={containerStyle}>
-          {boxImageList}
-        </div>
+        <Motion style={{
+          shortX: spring(this.state.shortX, springConfig)
+        }}>
+          {
+            interpolatStyle => (
+              <div id='touchbody' className='bt-container' style={{
+                transform: `translate3d(${interpolatStyle.shortX}px, 0, 0)`,
+                WebkitTransform: `translate3d(${interpolatStyle.shortX}px, 0, 0)`
+              }}>{boxImageList}</div>
+            )
+          }
+        </Motion>
         {backgroundImageList}
         <div className={this.state.coverClass}>
           {cover}
