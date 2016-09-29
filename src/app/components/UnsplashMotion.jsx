@@ -22,6 +22,10 @@ let imageList = [
 
 let winHeight = 0
 let winWidth = 0
+let springConfig = {
+  stiffness: 600,
+  damping: 50,
+}
 
 class Unsplash extends React.Component {
   constructor(props, context) {
@@ -59,10 +63,10 @@ class Unsplash extends React.Component {
     }
 
     let scaleStyle = {
-      top: spring(0),
-      height: spring(winHeight),
-      width: spring(( imageData.width / imageData.height ) * winHeight),
-      left: spring( (( imageData.width / imageData.height ) * winHeight - winWidth) / -2),
+      top: spring(0, springConfig),
+      height: spring(winHeight, springConfig),
+      width: spring(( imageData.width / imageData.height ) * winHeight, springConfig),
+      left: spring( (( imageData.width / imageData.height ) * winHeight - winWidth) / -2, springConfig),
     }
 
     this.setState({
@@ -77,22 +81,17 @@ class Unsplash extends React.Component {
     let imageData = this.state.defaulScaleStyle
 
     let scaleStyle = {
-      top: spring(imageData.top),
-      left: spring(imageData.left),
-      height: spring(imageData.height),
-      width: spring(imageData.width),
+      top: spring(imageData.top, springConfig),
+      left: spring(imageData.left, springConfig),
+      height: spring(imageData.height, springConfig),
+      width: spring(imageData.width, springConfig),
     }
 
     this.setState({
       pageOpen: true,
       scaleStyle: scaleStyle,
     })
-    // TransitionEnd(e.target.parentElement, ()=>{
-    //   this.setState({
-    //     showPhotoTilt: false,
-    //   })
-    //   document.body.style.overflow = 'auto'
-    // })
+
   }
 
   hiddenPage() {
