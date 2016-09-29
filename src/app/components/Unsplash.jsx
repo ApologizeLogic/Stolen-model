@@ -20,27 +20,88 @@ let imageList = [
   img6,
 ]
 
-let reqAnimationFrame = (function () {
-    return window[Hammer.prefixed(window, 'requestAnimationFrame')] || function (callback) {
-        window.setTimeout(callback, 1000 / 60);
-    };
-})();
+let winHeight = 0
+let winWidth = 0
 
 class Unsplash extends React.Component {
   constructor(props, context) {
     super(props, context);
 
+    this.handelImage = this.handelImage.bind(this)
+    this.handelImageClose = this.handelImageClose.bind(this)
+
     this.state = {
-      shortX : 0,
+      showPhotoTilt: false,
+      scaleImg : null,
+      imageData : null,
+      scaleParameter: 1,
+      tyParameter: 0,
     }
   }
 
   componentDidMount() {
-    //winHeight = window.innerHeight;
-    //winWidth = window.innerWidth;
+    winHeight = window.innerHeight;
+    winWidth = window.innerWidth;
+  }
+
+  handelImage(e, img) {
+    e.preventDefault()
+    let imageData = e.target.getBoundingClientRect()
+    document.body.style.overflow = 'hidden'
+    this.setState({
+      scaleImg: img,
+      imageData: imageData,
+      showPhotoTilt: true,
+      scaleParameter: winHeight / imageData.height,
+      tyParameter: winHeight/2 - (imageData.top + imageData.height/2 ),
+    })
+  }
+
+  handelImageClose(e) {
+    this.setState({
+      scaleParameter: 1,
+      tyParameter: 0,
+    })
+    TransitionEnd(e.target.parentElement, ()=>{
+      this.setState({
+        showPhotoTilt: false,
+      })
+      document.body.style.overflow = 'auto'
+    })
   }
 
   render() {
+
+    let states = this.state
+
+    let pageStyle = states.showPhotoTilt ? {
+      opacity: 1,
+      pointerEvents: 'auto',
+    } : {
+      opacity: 0,
+      pointerEvents: 'none',
+    }
+
+    let scaleStyle = states.imageData ? {
+      top: states.imageData.top,
+      left: states.imageData.left,
+      height: states.imageData.height,
+      width: states.imageData.width,
+      transform: `translate3d(0, ${states.tyParameter}px, 0) scale3d(${states.scaleParameter}, ${states.scaleParameter}, 1)`,
+    } : null
+
+    let transformStyle = states.scaleImg ? {
+      backgroundImage: `url(${states.scaleImg})`,
+      transform: `transition3d(0, 0, 0)`,
+    } : null
+
+    let photoTilt = (
+      <div className='un-photo-page' style={pageStyle}>
+        <div className='un-photo-scale' style={scaleStyle}>
+          <div className='un-photo-transform' style={transformStyle} onClick={this.handelImageClose}></div>
+        </div>
+      </div>
+    )
 
     return (
       <div className='un-container'>
@@ -49,7 +110,7 @@ class Unsplash extends React.Component {
             imageList.map((img, index)=>{
               let bgStyle = {
                 backgroundImage: `url(${img})`,
-                height: 250,
+                height: 250,                   // 需要检测图片原始高度再根据高宽比显示
               }
               return (
                 <div key={index} className='un-grid-item'>
@@ -59,13 +120,16 @@ class Unsplash extends React.Component {
                       <div className='un-grid-name'>Evan Kirby</div>
                     </span>
                   </div>
-                  <div className='un-grid-image' style={bgStyle}>
+                  <div className='un-grid-image' style={bgStyle} onClick={(e) => this.handelImage(e, img)}>
                   </div>
                 </div>
               )
             })
           }
         </div>
+        <span>
+          {photoTilt}
+        </span>
       </div>
     );
   }
