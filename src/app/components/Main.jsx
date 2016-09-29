@@ -222,7 +222,7 @@ class Main extends React.Component {
         showCover: false,
         coverClass: 'bt-cover',
       })
-    }, 600)
+    }, 450)
 
     // TransitionEnd(this.refs.coverBanner,()=>{
     //   this.setState({
@@ -271,6 +271,24 @@ class Main extends React.Component {
           <div className='bt-box-content'></div>
         </div>
       )
+
+      // boxImageList.push(
+      //   <Motion key={index} style={{
+      //     shortX: spring( (this.state.shortX / 4 + (index - 1) * 70), springConfig)
+      //   }}>
+      //     {
+      //       interpolatingStyle => (
+      //         <div className='bt-box' onClick={(e) => this.cloneBox(e, boxStyle)}>
+      //           <div className='bt-box-banner' style={{
+      //             backgroundImage: `url(${val})`,
+      //             backgroundPositionX: interpolatingStyle.shortX,
+      //           }}></div>
+      //           <div className='bt-box-content'></div>
+      //         </div>
+      //       )
+      //     }
+      //   </Motion>
+      // )
     })
 
     let cover = this.state.showCover ? (
