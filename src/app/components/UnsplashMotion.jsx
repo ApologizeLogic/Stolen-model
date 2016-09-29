@@ -27,6 +27,10 @@ let springConfig = {
   damping: 50,
 }
 
+function pointerEvents(e) {
+  e.preventDefault()
+}
+
 class Unsplash extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -51,7 +55,9 @@ class Unsplash extends React.Component {
 
   handelImage(e, img) {
     e.preventDefault()
-    document.body.style.overflow = 'hidden'
+    // document.documentElement.style.overflow = 'hidden'
+    // document.body.style.overflow = 'hidden'
+    window.addEventListener('touchmove', pointerEvents)
 
     let imageData = e.target.getBoundingClientRect()
 
@@ -101,7 +107,9 @@ class Unsplash extends React.Component {
         showPhotoTilt: false,
         defaulScaleStyle: null,
       })
-      document.body.style.overflow = 'auto'
+      // document.body.style.overflow = 'auto'
+      // document.documentElement.style.overflow = 'auto'
+      window.removeEventListener('touchmove', pointerEvents)
     }
   }
 
