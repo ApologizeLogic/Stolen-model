@@ -5,9 +5,10 @@ import reactTapEventPlugin from 'react-tap-event-plugin'
 // import Main from './components/Main'
 // import List from './components/List'
 import Unsplash from './components/Unsplash'
+import UnsplashMotion from './components/UnsplashMotion'
 
 reactTapEventPlugin()
 
 ReactDOM.render((
-  <Unsplash />
+  <UnsplashMotion />
 ), document.getElementById('app'));

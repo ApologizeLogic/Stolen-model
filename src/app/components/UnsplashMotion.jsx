@@ -1,5 +1,5 @@
 import React from 'react'
-import Hammer from 'hammerjs'
+import { spring, Motion, presets } from 'react-motion';
 
 import '../style/unsplash.scss';
 import TransitionEnd from '../utils/transitionEnd'
@@ -29,13 +29,14 @@ class Unsplash extends React.Component {
 
     this.handelImage = this.handelImage.bind(this)
     this.handelImageClose = this.handelImageClose.bind(this)
+    this.hiddenPage = this.hiddenPage.bind(this)
 
     this.state = {
-      showPhotoTilt: false,
-      scaleImg : null,
-      imageData : null,
-      scaleParameter: 1,
-      tyParameter: 0,
+      showPhotoTilt : false,
+      scaleImg      : null,
+      defaulScaleStyle : null,
+      scaleStyle    : null,
+      pageOpen      : false,
     }
   }
 
@@ -46,33 +47,69 @@ class Unsplash extends React.Component {
 
   handelImage(e, img) {
     e.preventDefault()
-    let imageData = e.target.getBoundingClientRect()
     document.body.style.overflow = 'hidden'
+
+    let imageData = e.target.getBoundingClientRect()
+
+    let defaulScaleStyle = {
+      top: imageData.top,
+      left: imageData.left,
+      height: imageData.height,
+      width: imageData.width,
+    }
+
+    let scaleStyle = {
+      top: spring(0),
+      height: spring(winHeight),
+      width: spring(( imageData.width / imageData.height ) * winHeight),
+      left: spring( (( imageData.width / imageData.height ) * winHeight - winWidth) / -2),
+    }
+
     this.setState({
       scaleImg: img,
-      imageData: imageData,
+      defaulScaleStyle: defaulScaleStyle,
+      scaleStyle: scaleStyle,
       showPhotoTilt: true,
-      scaleParameter: winHeight / imageData.height,
-      tyParameter: winHeight/2 - (imageData.top + imageData.height/2 ),
     })
   }
 
   handelImageClose(e) {
+    let imageData = this.state.defaulScaleStyle
+
+    let scaleStyle = {
+      top: spring(imageData.top),
+      left: spring(imageData.left),
+      height: spring(imageData.height),
+      width: spring(imageData.width),
+    }
+
     this.setState({
-      scaleParameter: 1,
-      tyParameter: 0,
+      pageOpen: true,
+      scaleStyle: scaleStyle,
     })
-    TransitionEnd(e.target.parentElement, ()=>{
+    // TransitionEnd(e.target.parentElement, ()=>{
+    //   this.setState({
+    //     showPhotoTilt: false,
+    //   })
+    //   document.body.style.overflow = 'auto'
+    // })
+  }
+
+  hiddenPage() {
+    if(this.state.pageOpen){
       this.setState({
+        pageOpen: false,
         showPhotoTilt: false,
+        defaulScaleStyle: null,
       })
       document.body.style.overflow = 'auto'
-    })
+    }
   }
 
   render() {
 
     let states = this.state
+
     let pageStyle = states.showPhotoTilt ? {
       opacity: 1,
       pointerEvents: 'auto',
@@ -81,14 +118,6 @@ class Unsplash extends React.Component {
       pointerEvents: 'none',
     }
 
-    let scaleStyle = states.imageData ? {
-      top: states.imageData.top,
-      left: states.imageData.left,
-      height: states.imageData.height,
-      width: states.imageData.width,
-      transform: `translate3d(0, ${states.tyParameter}px, 0) scale3d(${states.scaleParameter}, ${states.scaleParameter}, 1)`,
-    } : null
-
     let transformStyle = states.scaleImg ? {
       backgroundImage: `url(${states.scaleImg})`,
       transform: `transition3d(0, 0, 0)`,
@@ -96,9 +125,17 @@ class Unsplash extends React.Component {
 
     let photoTilt = (
       <div className='un-photo-page' style={pageStyle}>
-        <div className='un-photo-scale' style={scaleStyle}>
-          <div className='un-photo-transform' style={transformStyle} onClick={this.handelImageClose}></div>
-        </div>
+      { this.state.defaulScaleStyle ? (
+        <Motion defaultStyle={this.state.defaulScaleStyle} style={this.state.scaleStyle} onRest={this.hiddenPage}>
+          { 
+            interpolatingStyle => (
+              <div className='un-photo-scale' style={interpolatingStyle}>
+                <div className='un-photo-transform' style={transformStyle} onClick={this.handelImageClose}></div>
+              </div>
+            )
+          }
+        </Motion> ): null
+      }
       </div>
     )
 
