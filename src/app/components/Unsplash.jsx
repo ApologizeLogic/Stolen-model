@@ -1,5 +1,5 @@
 import React from 'react'
-import Hammer from 'hammerjs'
+import PhotoTilt from './PhotoTilt'
 
 import '../style/unsplash.scss';
 import TransitionEnd from '../utils/transitionEnd'
@@ -62,45 +62,23 @@ class Unsplash extends React.Component {
       scaleParameter: 1,
       tyParameter: 0,
     })
-    TransitionEnd(e.target.parentElement, ()=>{
+    // TransitionEnd(e.target.parentElement, ()=>{
+    //   this.setState({
+    //     showPhotoTilt: false,
+    //   })
+    //   document.body.style.overflow = 'auto'
+    // })
+    setTimeout(()=>{
       this.setState({
         showPhotoTilt: false,
       })
       document.body.style.overflow = 'auto'
-    })
+    }, 400)
   }
 
   render() {
 
     let states = this.state
-    let pageStyle = states.showPhotoTilt ? {
-      opacity: 1,
-      pointerEvents: 'auto',
-    } : {
-      opacity: 0,
-      pointerEvents: 'none',
-    }
-
-    let scaleStyle = states.imageData ? {
-      top: states.imageData.top,
-      left: states.imageData.left,
-      height: states.imageData.height,
-      width: states.imageData.width,
-      transform: `translate3d(0, ${states.tyParameter}px, 0) scale3d(${states.scaleParameter}, ${states.scaleParameter}, 1)`,
-    } : null
-
-    let transformStyle = states.scaleImg ? {
-      backgroundImage: `url(${states.scaleImg})`,
-      transform: `transition3d(0, 0, 0)`,
-    } : null
-
-    let photoTilt = (
-      <div className='un-photo-page' style={pageStyle}>
-        <div className='un-photo-scale' style={scaleStyle}>
-          <div className='un-photo-transform' style={transformStyle} onClick={this.handelImageClose}></div>
-        </div>
-      </div>
-    )
 
     return (
       <div className='un-container'>
@@ -127,7 +105,17 @@ class Unsplash extends React.Component {
           }
         </div>
         <span>
-          {photoTilt}
+          <PhotoTilt
+            ref='photo'
+            key='photo'
+            showPhotoTilt={states.showPhotoTilt}
+            imageData={states.imageData}
+            tyParameter={states.tyParameter}
+            scaleParameter={states.scaleParameter}
+            scaleImg={states.scaleImg}
+            handelImageClose={this.handelImageClose}
+          >
+          </PhotoTilt>
         </span>
       </div>
     );

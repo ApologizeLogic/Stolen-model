@@ -10,5 +10,5 @@ import UnsplashMotion from './components/UnsplashMotion'
 reactTapEventPlugin()
 
 ReactDOM.render((
-  <UnsplashMotion />
+  <Unsplash />
 ), document.getElementById('app'));
