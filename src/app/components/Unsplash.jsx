@@ -10,6 +10,7 @@ import img3 from '../images/3.jpg'
 import img4 from '../images/4.jpg'
 import img5 from '../images/5.jpg'
 import img6 from '../images/6.jpg'
+import img7 from '../images/7.jpg'
 
 let imageList = [
   img1,
@@ -18,10 +19,11 @@ let imageList = [
   img4,
   img5,
   img6,
+  img7,
 ]
 
-let winHeight = 0
-let winWidth = 0
+let winHeight = window.innerHeight
+let winWidth = window.innerWidth
 
 class Unsplash extends React.Component {
   constructor(props, context) {
@@ -40,8 +42,6 @@ class Unsplash extends React.Component {
   }
 
   componentDidMount() {
-    winHeight = window.innerHeight;
-    winWidth = window.innerWidth;
   }
 
   handelImage(e, img) {
@@ -85,9 +85,16 @@ class Unsplash extends React.Component {
         <div className='un-grid-single'>
           {
             imageList.map((img, index)=>{
+              
+              let imgDom = new Image()
+                  imgDom.src = img
+              let naturalWidth = imgDom.naturalWidth
+              let naturalHeight = imgDom.naturalHeight
+              let realHeight = winWidth * ( naturalHeight / naturalWidth )
+
               let bgStyle = {
                 backgroundImage: `url(${img})`,
-                height: 250,                   // 需要检测图片原始高度再根据高宽比显示
+                height: realHeight || 250,                   // 需要检测图片原始高度再根据高宽比显示
               }
               return (
                 <div key={index} className='un-grid-item'>

@@ -81,7 +81,7 @@ a {
     height: 100%;
     position: fixed;
     z-index: 9;
-    overflow: hidden;    
+    overflow: hidden;
 
     .un-photo-scale {
       position: relative;
@@ -104,6 +104,7 @@ a {
       left: 0;
       height: 100%;
       width: 100%;
+      transition: background .1s ease;
 
       .un-photo-zoom-top {
         position: absolute;
@@ -112,8 +113,9 @@ a {
         width: 100%;
         padding: 15px 12px;
         opacity: 0;
-        transition: opacity .1s ease;
+        transition: opacity .2s ease;
         display: flex;
+        visibility: hidden;
 
         .un-zoom-logo {
           width: 30%;
@@ -123,6 +125,7 @@ a {
           padding-left: 6px;
           opacity: 0.7;
           cursor: pointer;
+          -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
         }
         .un-zoom-share {
           width: 70%;
@@ -166,8 +169,9 @@ a {
         width: 100%;
         padding: 15px 12px;
         opacity: 0;
-        transition: opacity .1s ease;
+        transition: opacity .2s ease;
         display: flex;
+        visibility: hidden;
 
         .un-zoom-bottom-left {
           margin: 0;
@@ -201,21 +205,38 @@ a {
             color: #fff;
             margin-left: 25px;
             cursor: pointer;
-            font-size: 28px;
+            font-size: 26px;
             line-height: 32px;
           }
         }
       }
+
+      .un-zoom-fake {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        visibility: visible;
+      }
     }
 
     .un-photo-zoom-show {
+      background: -webkit-linear-gradient(top,rgba(0,0,0,.25),transparent 20%,transparent 60%,rgba(0,0,0,.3));
+      background: linear-gradient(180deg,rgba(0,0,0,.25) 0,transparent 20%,transparent 60%,rgba(0,0,0,.3));
+      transition: background .3s .3s ease;
+
       .un-photo-zoom-top {
         opacity: 1;
         transition: opacity .3s .3s ease;
+        visibility: visible;
       }
       .un-photo-zoom-bottom {
         opacity: 1;
         transition: opacity .3s .3s ease;
+        visibility: visible;
+      }
+
+      .un-zoom-fake {
+        visibility: hidden;
       }
     }
 
