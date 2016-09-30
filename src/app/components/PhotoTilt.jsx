@@ -137,11 +137,20 @@ class PhototTilt extends React.Component {
 
       pxToMove = (tilt * centerOffset) / this.state.maxTilt
 
-      this.updateImgPosition(pxToMove * -1)
+      console.log(centerOffset)
 
-      this.updateTiltBar(tilt)
+      if(this.state.hiddenZoom){
 
-      window.requestAnimationFrame(this.photoTilt)
+        this.updateImgPosition(pxToMove * -1)
+
+        this.updateTiltBar(tilt)
+
+        window.requestAnimationFrame(this.photoTilt)
+
+      }else{
+
+        this.updateImgPosition(0)
+      }
   }
 
   updateTiltBar(tilt) {
@@ -150,9 +159,7 @@ class PhototTilt extends React.Component {
   }
 
   updateImgPosition(pxToMove) {
-    if( Math.abs(pxToMove) < centerOffset ){
       setTranslateX(imgNode, pxToMove);
-    }
   }
 
   render() {
@@ -177,16 +184,12 @@ class PhototTilt extends React.Component {
 
     let transformStyle = props.scaleImg ? {
       backgroundImage: `url(${props.scaleImg})`,
-      //transform: `transition3d(0, 0, 0)`,
     } : null
 
     return (
       <div className='un-photo-page' style={pageStyle}>
         <div className='un-photo-scale' style={scaleStyle}>
           <div className='un-photo-transform' ref='overImage' style={transformStyle} onClick={this.handelImageTilt}>
-            <div className="un-photo-bar">
-              <div ref="overBar" className="un-bar-indicoter"></div>
-            </div>
           </div>
         </div>
         <div className={props.scaleParameter !== 1 && !states.hiddenZoom ? 'un-photo-zoom un-photo-zoom-show' : 'un-photo-zoom'}>
@@ -227,6 +230,10 @@ class PhototTilt extends React.Component {
           </div>
           
           <div className='un-zoom-fake' onClick={this.stopTitl}></div>
+
+          <div className="un-photo-bar">
+            <div ref="overBar" className="un-bar-indicoter"></div>
+          </div>
 
         </div>
       </div>
