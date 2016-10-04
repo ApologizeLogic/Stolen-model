@@ -24,6 +24,7 @@ let imageList = [
 
 let winHeight = window.innerHeight
 let winWidth = window.innerWidth
+let imageMarginTop = 0                         // 记录图片距离top值
 
 class Unsplash extends React.Component {
   constructor(props, context) {
@@ -31,6 +32,7 @@ class Unsplash extends React.Component {
 
     this.handelImage = this.handelImage.bind(this)
     this.handelImageClose = this.handelImageClose.bind(this)
+    this.handelBlog = this.handelBlog.bind(this)
 
     this.state = {
       showPhotoTilt: false,
@@ -48,6 +50,7 @@ class Unsplash extends React.Component {
     e.preventDefault()
     let imageData = e.target.getBoundingClientRect()
     document.body.style.overflow = 'hidden'
+    imageMarginTop = imageData.top
     this.setState({
       scaleImg: img,
       imageData: imageData,
@@ -76,6 +79,13 @@ class Unsplash extends React.Component {
     }, 400)
   }
 
+  handelBlog() {
+    this.setState({
+      scaleParameter: 1,
+      tyParameter: -1 * imageMarginTop,
+    })
+  }
+
   render() {
 
     let states = this.state
@@ -88,8 +98,8 @@ class Unsplash extends React.Component {
               
               let imgDom = new Image()
                   imgDom.src = img
-              let naturalWidth = imgDom.naturalWidth
-              let naturalHeight = imgDom.naturalHeight
+              let naturalWidth = imgDom.width
+              let naturalHeight = imgDom.height
               let realHeight = winWidth * ( naturalHeight / naturalWidth )
 
               let bgStyle = {
@@ -121,6 +131,7 @@ class Unsplash extends React.Component {
             scaleParameter={states.scaleParameter}
             scaleImg={states.scaleImg}
             handelImageClose={this.handelImageClose}
+            handelBlog={this.handelBlog}
           >
           </PhotoTilt>
         </span>

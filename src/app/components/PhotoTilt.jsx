@@ -24,6 +24,7 @@ class PhototTilt extends React.Component {
     super(props, context);
 
     this.handelImageTilt = this.handelImageTilt.bind(this)
+    this.handelBlog = this.handelBlog.bind(this)
     this.startTitl = this.startTitl.bind(this)
     this.stopTitl = this.stopTitl.bind(this)
     this.startAnimat = this.startAnimat.bind(this)
@@ -32,7 +33,8 @@ class PhototTilt extends React.Component {
 
     this.state = {
       hiddenZoom: false,
-      maxTilt: 20,
+      maxTilt: 30,
+      pageClass: 'un-photo-page'
     }
   }
 
@@ -43,6 +45,14 @@ class PhototTilt extends React.Component {
     e.preventDefault()
     this.state.hiddenZoom = false
     this.props.handelImageClose(e)
+  }
+
+  handelBlog(e) {
+    e.preventDefault()
+    this.setState({
+      pageClass: 'un-photo-page un-show-blog'
+    })
+    this.props.handelBlog()
   }
 
   startTitl() {
@@ -137,8 +147,6 @@ class PhototTilt extends React.Component {
 
       pxToMove = (tilt * centerOffset) / this.state.maxTilt
 
-      console.log(centerOffset)
-
       if(this.state.hiddenZoom){
 
         this.updateImgPosition(pxToMove * -1)
@@ -186,12 +194,22 @@ class PhototTilt extends React.Component {
       backgroundImage: `url(${props.scaleImg})`,
     } : null
 
+    let barStyle = {
+      opacity: states.hiddenZoom ? 1 : 0
+    }
+
     return (
-      <div className='un-photo-page' style={pageStyle}>
+      <div className={states.pageClass} style={pageStyle}>
+
         <div className='un-photo-scale' style={scaleStyle}>
           <div className='un-photo-transform' ref='overImage' style={transformStyle} onClick={this.handelImageTilt}>
           </div>
         </div>
+
+        <div className="un-photo-bar" style={barStyle}>
+          <div ref="overBar" className="un-bar-indicoter"></div>
+        </div>
+
         <div className={props.scaleParameter !== 1 && !states.hiddenZoom ? 'un-photo-zoom un-photo-zoom-show' : 'un-photo-zoom'}>
           
           <div className='un-photo-zoom-top'>
@@ -220,7 +238,7 @@ class PhototTilt extends React.Component {
               </span>
             </div>
             <div className='un-zoom-bottom-right'>
-              <span className='un-bottom-option'>
+              <span className='un-bottom-option' onClick={this.handelBlog}>
                 <i className="fa fa-pencil" aria-hidden="true"></i>
               </span>
               <span className='un-bottom-option' onClick={this.startTitl}>
@@ -230,11 +248,12 @@ class PhototTilt extends React.Component {
           </div>
           
           <div className='un-zoom-fake' onClick={this.stopTitl}></div>
+        </div>
 
-          <div className="un-photo-bar">
-            <div ref="overBar" className="un-bar-indicoter"></div>
-          </div>
-
+        <div className='un-blog'>
+          <div className='un-stamp'></div>
+          <p>Strapless dresses, backless dresses – those dresses that scoop so low in the back so you have to wear a sticky bra. Celebs like Taylor Swift, Rihanna – even Princess Diana (yes, really!) may have rocked the trend on the red carpet and at royal events respectively, but ladies everywhere are following suit at slightly more plebeian events-and for good reason. When you show up at your friend’s wedding or that end-of-summer white party donning a backless dress, you’re sure to leave a memorable impression as you walk away showing off in such a subtly sexy way. If you should choose to rock the style, you’ll need to train all of the muscles in your back to work properly in order to get the look you want.</p>
+          <p>Outside of just looking great, giving your back muscles a little TLC in the gym is key to reaching any body goal-whether that’s aesthetic, injury reduction, performance enhancement, or a combination of all three. “We have a tendency to over-emphasize the muscles you can see in the mirror, while neglecting the ones you cannot,” says Stefan Underwood, an expert with EXOS. “Forgetting to balance your pushing exercises with a pull can negatively affect your posture and worse, your overall movement quality,” he says</p>
         </div>
       </div>
     );
