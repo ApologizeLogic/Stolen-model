@@ -18,6 +18,7 @@ let imgNode,
     tiltBarIndicatorWidth,
     tiltCenterOffset
 
+let transitionTime = 300
 
 class PhototTilt extends React.Component {
   constructor(props, context) {
@@ -25,6 +26,7 @@ class PhototTilt extends React.Component {
 
     this.handelImageTilt = this.handelImageTilt.bind(this)
     this.handelBlog = this.handelBlog.bind(this)
+    this.blogClose = this.blogClose.bind(this)
     this.startTitl = this.startTitl.bind(this)
     this.stopTitl = this.stopTitl.bind(this)
     this.startAnimat = this.startAnimat.bind(this)
@@ -53,6 +55,15 @@ class PhototTilt extends React.Component {
       pageClass: 'un-photo-page un-show-blog'
     })
     this.props.handelBlog()
+  }
+
+  blogClose() {
+    this.props.handelBlogClose()
+    setTimeout(()=>{
+      this.setState({
+        pageClass: 'un-photo-page'
+      })
+    }, transitionTime)
   }
 
   startTitl() {
@@ -246,14 +257,29 @@ class PhototTilt extends React.Component {
               </span>
             </div>
           </div>
+
+          <div className='un-photo-blog-top'>
+            <span className='un-photo-blog-angle-left' onClick={this.blogClose}>
+              <i className="fa fa-angle-left" aria-hidden="true"></i>
+            </span>
+            <span className='un-photo-blog-angle-right'>
+              <i className="fa fa-heart-o" aria-hidden="true"></i>
+            </span>
+          </div>
           
           <div className='un-zoom-fake' onClick={this.stopTitl}></div>
         </div>
 
         <div className='un-blog'>
-          <div className='un-stamp'></div>
-          <p>Strapless dresses, backless dresses – those dresses that scoop so low in the back so you have to wear a sticky bra. Celebs like Taylor Swift, Rihanna – even Princess Diana (yes, really!) may have rocked the trend on the red carpet and at royal events respectively, but ladies everywhere are following suit at slightly more plebeian events-and for good reason. When you show up at your friend’s wedding or that end-of-summer white party donning a backless dress, you’re sure to leave a memorable impression as you walk away showing off in such a subtly sexy way. If you should choose to rock the style, you’ll need to train all of the muscles in your back to work properly in order to get the look you want.</p>
-          <p>Outside of just looking great, giving your back muscles a little TLC in the gym is key to reaching any body goal-whether that’s aesthetic, injury reduction, performance enhancement, or a combination of all three. “We have a tendency to over-emphasize the muscles you can see in the mirror, while neglecting the ones you cannot,” says Stefan Underwood, an expert with EXOS. “Forgetting to balance your pushing exercises with a pull can negatively affect your posture and worse, your overall movement quality,” he says</p>
+          <h1 className='un-blog-title un-opact-transition'>
+            <span>Tim Coppens of UAS on Intelligently Melding Aesthetics With Innovation</span>
+          </h1>
+          <div className='un-blog-excerpt un-opact-transition'>78 STH AVENUE, NEW YORK</div>
+          <div className='un-blog-name un-opact-transition'>
+            By Eric Hsu in · Oct 5, 2016 in Footwear
+          </div>
+          <p className='un-opact-transition'>Strapless dresses, backless dresses – those dresses that scoop so low in the back so you have to wear a sticky bra. Celebs like Taylor Swift, Rihanna – even Princess Diana (yes, really!) may have rocked the trend on the red carpet and at royal events respectively, but ladies everywhere are following suit at slightly more plebeian events-and for good reason. When you show up at your friend’s wedding or that end-of-summer white party donning a backless dress, you’re sure to leave a memorable impression as you walk away showing off in such a subtly sexy way. If you should choose to rock the style, you’ll need to train all of the muscles in your back to work properly in order to get the look you want.</p>
+          <p className='un-opact-transition'>Outside of just looking great, giving your back muscles a little TLC in the gym is key to reaching any body goal-whether that’s aesthetic, injury reduction, performance enhancement, or a combination of all three. “We have a tendency to over-emphasize the muscles you can see in the mirror, while neglecting the ones you cannot,” says Stefan Underwood, an expert with EXOS. “Forgetting to balance your pushing exercises with a pull can negatively affect your posture and worse, your overall movement quality,” he says</p>
         </div>
       </div>
     );

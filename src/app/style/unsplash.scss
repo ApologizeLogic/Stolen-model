@@ -211,6 +211,30 @@ a {
         }
       }
 
+      .un-photo-blog-top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 15px 20px;
+        opacity: 0;
+        transition: opacity .3s ease;
+        display: flex;
+        justify-content: space-between;
+        visibility: hidden;
+
+        .un-photo-blog-angle-left,
+        .un-photo-blog-angle-right {
+          font-size: 26px;
+          color: #fff;
+          cursor: pointer;
+        }
+
+        .un-photo-blog-angle-right {
+          font-size: 20px;
+        }
+      }
+
       .un-zoom-fake {
         position: absolute;
         height: 100%;
@@ -287,15 +311,70 @@ a {
       top: -5px;
       width: 100%;
     }
+
+    .un-blog-title {
+      font-family: "Source Sans Pro HB","Helvetica Neue",Helvetica,Arial,sans-serif,"Microsoft Yahei";
+      color: #222;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.7rem;
+    }
+
+    .un-blog-excerpt {
+      font-size: 16px;
+      color: #7D7D7D;
+      margin-bottom: 18px;
+      margin-top: 8px;
+    }
+
+    .un-blog-name {
+      color: #999;
+      margin-bottom: 5px;
+      font-size: 12px;
+    }
+
+    p {
+      margin: 5px 0;
+    }
+  }
+
+  .un-opact-transition {
+    // transition: opacity .5s .3s ease, transform .5s .3s ease;
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  @for $i from 1 to 5 {
+    .un-opact-transition:nth-child(#{$i}) {
+      transition: opacity .5s (.2s + 0.1 * $i) ease, transform .5s (.2s + 0.1 * $i) ease;
+    }
   }
 
   .un-show-blog {
     overflow-y: auto;
     overflow-x: hidden;
 
+    .un-photo-zoom {
+
+      .un-photo-blog-top {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .un-zoom-fake {
+        visibility: hidden;
+      }
+    }
+
     .un-blog {
       visibility: visible;
     }
+
+    .un-opact-transition {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
   }
 
 }

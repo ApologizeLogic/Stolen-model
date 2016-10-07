@@ -25,6 +25,8 @@ let imageList = [
 let winHeight = window.innerHeight
 let winWidth = window.innerWidth
 let imageMarginTop = 0                         // 记录图片距离top值
+let imageScale = 0                             // 记录图片需要放大的尺寸
+let imageTranslateX = 0                         // 记录图片移动的值
 
 class Unsplash extends React.Component {
   constructor(props, context) {
@@ -33,6 +35,7 @@ class Unsplash extends React.Component {
     this.handelImage = this.handelImage.bind(this)
     this.handelImageClose = this.handelImageClose.bind(this)
     this.handelBlog = this.handelBlog.bind(this)
+    this.handelBlogClose = this.handelBlogClose.bind(this)
 
     this.state = {
       showPhotoTilt: false,
@@ -48,15 +51,19 @@ class Unsplash extends React.Component {
 
   handelImage(e, img) {
     e.preventDefault()
-    let imageData = e.target.getBoundingClientRect()
     document.body.style.overflow = 'hidden'
+
+    let imageData = e.target.getBoundingClientRect()
     imageMarginTop = imageData.top
+    imageScale = winHeight / imageData.height
+    imageTranslateX = winHeight/2 - (imageData.top + imageData.height/2 )
+
     this.setState({
       scaleImg: img,
       imageData: imageData,
       showPhotoTilt: true,
-      scaleParameter: winHeight / imageData.height,
-      tyParameter: winHeight/2 - (imageData.top + imageData.height/2 ),
+      scaleParameter: imageScale,
+      tyParameter: imageTranslateX,
     })
   }
 
@@ -83,6 +90,13 @@ class Unsplash extends React.Component {
     this.setState({
       scaleParameter: 1,
       tyParameter: -1 * imageMarginTop,
+    })
+  }
+
+  handelBlogClose() {
+    this.setState({
+      scaleParameter: imageScale,
+      tyParameter: imageTranslateX,
     })
   }
 
@@ -132,6 +146,7 @@ class Unsplash extends React.Component {
             scaleImg={states.scaleImg}
             handelImageClose={this.handelImageClose}
             handelBlog={this.handelBlog}
+            handelBlogClose={this.handelBlogClose}
           >
           </PhotoTilt>
         </span>
