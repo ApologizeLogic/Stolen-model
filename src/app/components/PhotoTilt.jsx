@@ -1,5 +1,6 @@
 import React from 'react'
 import TransitionEnd from '../utils/transitionEnd'
+import TouchSlider from './TouchSlider'
 
 const setTranslateX = function(node, amount) {
     node.style.webkitTransform =
@@ -18,7 +19,9 @@ let imgNode,
     tiltBarIndicatorWidth,
     tiltCenterOffset
 
-let transitionTime = 300
+let transitionTime = 350
+let winHeight = window.innerHeight
+let winWidth = window.innerWidth
 
 class PhototTilt extends React.Component {
   constructor(props, context) {
@@ -36,7 +39,8 @@ class PhototTilt extends React.Component {
     this.state = {
       hiddenZoom: false,
       maxTilt: 30,
-      pageClass: 'un-photo-page'
+      pageClass: 'un-photo-page',
+      showSlider: false,
     }
   }
 
@@ -55,10 +59,21 @@ class PhototTilt extends React.Component {
       pageClass: 'un-photo-page un-show-blog'
     })
     this.props.handelBlog()
+
+    setTimeout(()=>{
+      this.setState({
+        showSlider: true,
+      })
+    }, transitionTime)
   }
 
   blogClose() {
+    this.setState({
+        showSlider: false,
+    })
+    setTimeout(()=>{
     this.props.handelBlogClose()
+    }, 50)
     setTimeout(()=>{
       this.setState({
         pageClass: 'un-photo-page'
@@ -209,13 +224,24 @@ class PhototTilt extends React.Component {
       opacity: states.hiddenZoom ? 1 : 0
     }
 
+    let sliderStyle = {
+      width: props.imageList.length * winWidth,
+      transform: `translate3d(0, 0, 0)`
+    }
+
+    let imageContent = states.showSlider && props.imageList ? (
+      <TouchSlider imageList={props.imageList} ></TouchSlider>
+    ) : (
+      <div className='un-photo-scale' style={scaleStyle}>
+        <div className='un-photo-transform' ref='overImage' style={transformStyle} onClick={this.handelImageTilt}>
+        </div>
+      </div>
+    )
+
     return (
       <div className={states.pageClass} style={pageStyle}>
 
-        <div className='un-photo-scale' style={scaleStyle}>
-          <div className='un-photo-transform' ref='overImage' style={transformStyle} onClick={this.handelImageTilt}>
-          </div>
-        </div>
+        {imageContent}
 
         <div className="un-photo-bar" style={barStyle}>
           <div ref="overBar" className="un-bar-indicoter"></div>

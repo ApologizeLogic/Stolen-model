@@ -28,6 +28,10 @@ let imageMarginTop = 0                         // 记录图片距离top值
 let imageScale = 0                             // 记录图片需要放大的尺寸
 let imageTranslateX = 0                         // 记录图片移动的值
 
+function preventDefault(e) {
+  e.preventDefault()
+}
+
 class Unsplash extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -106,7 +110,7 @@ class Unsplash extends React.Component {
 
     return (
       <div className='un-container'>
-        <div className='un-grid-single'>
+        <div ref='list' className='un-grid-single'>
           {
             imageList.map((img, index)=>{
               
@@ -147,6 +151,7 @@ class Unsplash extends React.Component {
             handelImageClose={this.handelImageClose}
             handelBlog={this.handelBlog}
             handelBlogClose={this.handelBlogClose}
+            imageList={imageList}
           >
           </PhotoTilt>
         </span>
