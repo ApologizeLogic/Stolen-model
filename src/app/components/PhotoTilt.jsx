@@ -229,19 +229,25 @@ class PhototTilt extends React.Component {
       transform: `translate3d(0, 0, 0)`
     }
 
-    let imageContent = states.showSlider && props.imageList ? (
-      <TouchSlider imageList={props.imageList} ></TouchSlider>
-    ) : (
-      <div className='un-photo-scale' style={scaleStyle}>
-        <div className='un-photo-transform' ref='overImage' style={transformStyle} onClick={this.handelImageTilt}>
-        </div>
-      </div>
-    )
+    // let imageContent = states.showSlider && props.imageList ? (
+    //   <TouchSlider imageList={props.imageList} ></TouchSlider>
+    // ) : (
+    //   <div className='un-photo-scale' style={scaleStyle}>
+    //     <div className='un-photo-transform' ref='overImage' style={transformStyle} onClick={this.handelImageTilt}>
+    //     </div>
+    //   </div>
+    // )
 
     return (
       <div className={states.pageClass} style={pageStyle}>
+        <div className={states.showSlider? 'un-show-slide' : 'un-hiden-slide'}>
+          <div className='un-photo-scale' style={scaleStyle}>
+            <div className='un-photo-transform' ref='overImage' style={transformStyle}>
+            </div>
+          </div>
 
-        {imageContent}
+          <TouchSlider imageList={props.imageList} ></TouchSlider>
+        </div>
 
         <div className="un-photo-bar" style={barStyle}>
           <div ref="overBar" className="un-bar-indicoter"></div>

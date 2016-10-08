@@ -387,6 +387,7 @@ a {
     left: 0;
     overflow: hidden;
     height: 250px;
+    display: none;
 
     .un-sliders {
       transition: transform .6s ease;
@@ -451,6 +452,15 @@ a {
 
     }
 
+  }
+
+  .un-show-slide {
+    .un-photo-slider {
+      display: block;
+    }
+    .un-photo-scale {
+      display: none;
+    }
   }
 
 }
