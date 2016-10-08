@@ -6,18 +6,6 @@ let winWidth = window.innerWidth
 let firstTouchX = 0
 let endTouchX = 0
 
-function throttle(fn, delay) {
-  let allowSample = true;
-
-  return function(e) {
-    if (allowSample) {
-      allowSample = false;
-      setTimeout(function() { allowSample = true; }, delay);
-      fn(e);
-    }
-  };
-}
-
 class TouchSlider extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -54,7 +42,7 @@ class TouchSlider extends React.Component {
     let touchobj = ev.changedTouches[0]
     endTouchX = touchobj.clientX - firstTouchX
     let sliderX = this.state.sliderX
-    let maxWidth = this.props.imageList.length * winWidth * -1
+    let maxWidth = ( this.props.imageList.length - 1 ) * winWidth * -1
 
     if(endTouchX <= 0){
       this.setState({
@@ -67,6 +55,13 @@ class TouchSlider extends React.Component {
     }
   }
 
+  itemClassName(i) {
+    if(i === this.state.sliderX / winWidth * -1){
+      return 'un-nav-item un-nav-item-current'
+    }
+    return 'un-nav-item'
+  }
+
   render() {
     let props = this.props
     let states = this.state
@@ -76,18 +71,27 @@ class TouchSlider extends React.Component {
       transform: `translate3d(${states.sliderX}px, 0, 0)`
     }
 
+    let imageSlide = []
+    let navItem = []
+
+    props.imageList.map((img, index)=>{
+      imageSlide.push(
+        <div key={index} className='un-sliders-item'>
+          <img src={img} />
+        </div>
+      )
+      navItem.push(
+        <button key={index} className={this.itemClassName(index)}></button>
+      )
+    })
+
     return (
       <div ref='slider' className='un-photo-slider'>
         <div className='un-sliders' style={sliderStyle}>
-          {
-            props.imageList.map((img, index)=>{
-              return (
-                <div key={index} className='un-sliders-item'>
-                  <img src={img} />
-                </div>
-              )
-            })
-          }
+          {imageSlide}
+        </div>
+        <div className='un-nav'>
+          {navItem}
         </div>
       </div>
     );
