@@ -47,6 +47,10 @@ class PhototTilt extends React.Component {
   componentDidMount() {
   }
 
+  shouldComponentUpdate(nextprops, nextstate) {
+    return true
+  }
+
   handelImageTilt(e) {
     e.preventDefault()
     this.state.hiddenZoom = false
@@ -228,15 +232,6 @@ class PhototTilt extends React.Component {
       width: props.imageList.length * winWidth,
       transform: `translate3d(0, 0, 0)`
     }
-
-    // let imageContent = states.showSlider && props.imageList ? (
-    //   <TouchSlider imageList={props.imageList} ></TouchSlider>
-    // ) : (
-    //   <div className='un-photo-scale' style={scaleStyle}>
-    //     <div className='un-photo-transform' ref='overImage' style={transformStyle} onClick={this.handelImageTilt}>
-    //     </div>
-    //   </div>
-    // )
 
     return (
       <div className={states.pageClass} style={pageStyle}>
