@@ -1,0 +1,21 @@
+.un-photo-page {
+  .un-photo-blog {
+    position: relative;
+    background: #fff;
+    width: 100%;
+    padding: 15px;
+    transition: visibility .1s .5s ease;
+    visibility: hidden;
+
+    .un-blog-content {
+      height: 500px;
+      width: 100%;
+    }
+
+  }
+
+  .un-show-blog {
+    visibility: visible;
+  }
+
+}
