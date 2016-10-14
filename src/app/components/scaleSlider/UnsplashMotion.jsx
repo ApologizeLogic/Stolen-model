@@ -32,6 +32,7 @@ let initPageY = 0             // 页面 Y 轴移动时变量
 let maxPageY = 0              // 页面所能移动的最大值
 let slideWidth = 0            // 图片 list 的总长度
 let slideState = 'crImg'      // 'crImg' 表示当前是全屏图片, 'crBlog' 表示当前转为 Blog 形式
+let imgCanDelea = true
 let springConfig = {
   stiffness: 600,
   damping: 50,
@@ -117,6 +118,13 @@ class Unsplash extends React.Component {
       left: 0,
     }
 
+    let slideStyle = {
+      top: 0,
+      height: spring(winHeight),
+      width: slideWidth,
+      left: 0,
+    }
+
     this.setState({
       scaleImg: img,
       defaulScaleStyle: defaulScaleStyle,
@@ -124,7 +132,7 @@ class Unsplash extends React.Component {
       showPhotoTilt: true,
 
       defaulSlideStyle: defaulSlideStyle,
-      slideStyle: defaulSlideStyle,
+      slideStyle: slideStyle,
     })
   }
 
@@ -134,6 +142,8 @@ class Unsplash extends React.Component {
     firstTouchY = touchobj.clientY
     firstTouchX = touchobj.clientX
     initPageY = this.state.pageTransY
+    // 'crImg' 状态下不可以向下移动
+    imgCanDelea = this.state.slideStyle.height.val === winHeight
   }
 
   winTouchMove(e) {
@@ -160,6 +170,9 @@ class Unsplash extends React.Component {
       }
 
       if ( Math.abs(touchYDelta) < 50 || Math.abs(touchXDelta) > 80 ) return
+
+      // 'crImg' 状态下不可以向下移动
+      if ( imgCanDelea && touchYDelta < 0 ) return
 
       let defaultStyle = this.state.defaulScaleStyle
 
