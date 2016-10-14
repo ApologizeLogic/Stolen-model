@@ -1,6 +1,7 @@
 import React from 'react'
 import { spring, Motion, presets } from 'react-motion';
 import ImageList from './ImageList'
+import PhotoTiltBox from './PhotoTiltBox'
 
 import '../../style/unsplash.scss';
 import '../../style/scaleSlide.scss'
@@ -69,6 +70,9 @@ class Unsplash extends React.Component {
       slideStyle    : null,
       pageTransY    : 0,
       slideTranX    : 0,
+
+      curBox        : 0,
+      startPhotoTilt: false,
     }
   }
 
@@ -79,9 +83,10 @@ class Unsplash extends React.Component {
 
   handelImage(e, img) {
     e.preventDefault()
-    window.addEventListener('touchstart', this.winTouchStart)
-    window.addEventListener('touchmove', this.winTouchMove)
-    window.addEventListener('touchend', this.winTouchEnd)
+    let mgPage = this.refs.mgPage
+    mgPage.addEventListener('touchstart', this.winTouchStart)
+    mgPage.addEventListener('touchmove', this.winTouchMove)
+    mgPage.addEventListener('touchend', this.winTouchEnd)
 
     let imageData = e.target.getBoundingClientRect()
     photoProportion = imageData.width / imageData.height
@@ -124,7 +129,7 @@ class Unsplash extends React.Component {
   }
 
   winTouchStart(e) {
-    e.preventDefault()
+    // e.preventDefault()
     let touchobj = e.changedTouches[0]
     firstTouchY = touchobj.clientY
     firstTouchX = touchobj.clientX
@@ -160,7 +165,7 @@ class Unsplash extends React.Component {
 
       let height = 0
 
-      if ( touchYDelta < 0) {
+      if ( touchYDelta < 0 ) {
         height = defaultStyle.height - touchYDelta > winHeight ? winHeight : defaultStyle.height - touchYDelta
       } else {
         height = winHeight - touchYDelta
@@ -190,7 +195,7 @@ class Unsplash extends React.Component {
   }
 
   winTouchEnd(e) {
-    e.preventDefault()
+    // e.preventDefault()
     let touchobj = e.changedTouches[0]
     let touchY = touchobj.clientY
     let touchX = touchobj.clientX
@@ -302,7 +307,7 @@ class Unsplash extends React.Component {
     // }
 
     let photoTilt = (
-      <div className='un-photo-page' style={pageStyle}>
+      <div className='un-photo-page' ref='mgPage' style={pageStyle}>
         <div className='un-photo-container' style={containStyle}>
           { states.defaulSlideStyle ? (
             <Motion defaultStyle={states.defaulSlideStyle} style={states.slideStyle}>
@@ -325,9 +330,11 @@ class Unsplash extends React.Component {
                         }
 
                         return (
-                          <div key={index} className='un-photo-slide-li'>
-                            <div className='un-photo-slide-li-img' style={slideImgStyle}></div>
-                          </div>
+                          <PhotoTiltBox 
+                            key={index} 
+                            slideImgStyle={slideImgStyle} 
+                            >
+                          </PhotoTiltBox>
                         )
                       })
                     }
