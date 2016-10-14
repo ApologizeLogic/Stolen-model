@@ -25,8 +25,11 @@ let imageList = [
 let winHeight = 0
 let winWidth = 0
 let firstTouchY = 0
-let photoProportion = 0
-let slideWidth = 0
+let firstTouchX = 0
+let photoProportion = 0       // 图片的长宽比
+let initPageY = 0             // 页面 Y 轴移动时变量
+let maxPageY = 0              // 页面所能移动的最大值
+let slideWidth = 0            // 图片 list 的总长度
 let slideState = 'crImg'      // 'crImg' 表示当前是全屏图片, 'crBlog' 表示当前转为 Blog 形式
 let springConfig = {
   stiffness: 600,
@@ -45,12 +48,6 @@ function throttle(fn, delay) {
   };
 }
 
-function winTouchStart(e) {
-  e.preventDefault()
-  let touchobj = e.changedTouches[0]
-  firstTouchY = touchobj.clientY
-}
-
 class Unsplash extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -58,6 +55,7 @@ class Unsplash extends React.Component {
     this.handelImage = this.handelImage.bind(this)
     // this.handelImageClose = this.handelImageClose.bind(this)
     // this.hiddenPage = this.hiddenPage.bind(this)
+    this.winTouchStart = this.winTouchStart.bind(this)
     this.winTouchMove = this.winTouchMove.bind(this)
     this.winTouchEnd = this.winTouchEnd.bind(this)
 
@@ -69,6 +67,8 @@ class Unsplash extends React.Component {
       pageOpen      : false,
       defaulSlideStyle: null,
       slideStyle    : null,
+      pageTransY    : 0,
+      slideTranX    : 0,
     }
   }
 
@@ -79,7 +79,7 @@ class Unsplash extends React.Component {
 
   handelImage(e, img) {
     e.preventDefault()
-    window.addEventListener('touchstart', winTouchStart)
+    window.addEventListener('touchstart', this.winTouchStart)
     window.addEventListener('touchmove', this.winTouchMove)
     window.addEventListener('touchend', this.winTouchEnd)
 
@@ -100,6 +100,9 @@ class Unsplash extends React.Component {
       left: spring( (photoProportion * winHeight - winWidth) / -2, springConfig),
     }
 
+    let blogBody = this.refs.blogBody.getBoundingClientRect()
+    // maxPageY 等于 crBlog 状态的 Image 高度加上 blogBody 的高度, 再加上 padding 值
+    maxPageY = (blogBody.height + winWidth / photoProportion + 30 - winHeight) * -1
     slideWidth = imageList.length * winWidth
 
     let defaulSlideStyle = {
@@ -120,14 +123,38 @@ class Unsplash extends React.Component {
     })
   }
 
+  winTouchStart(e) {
+    e.preventDefault()
+    let touchobj = e.changedTouches[0]
+    firstTouchY = touchobj.clientY
+    firstTouchX = touchobj.clientX
+    initPageY = this.state.pageTransY
+  }
+
   winTouchMove(e) {
     e.preventDefault()
     let moving = () => {
       let touchobj = e.changedTouches[0]
       let touchY = touchobj.clientY
+      let touchX = touchobj.clientX
       let touchYDelta = firstTouchY - touchY
+      let touchXDelta = touchX - firstTouchX
 
-      if( Math.abs(touchYDelta) < 50 ) return
+      if ( slideState === 'crBlog' ) {
+        let pageTransY = initPageY - touchYDelta * 1.2
+        if(pageTransY > 0){
+          slideState = 'crImg'
+          pageTransY = 0
+        } else if (pageTransY < maxPageY) {
+          pageTransY = maxPageY
+        }
+        this.setState({
+          pageTransY: pageTransY
+        })
+        return
+      }
+
+      if ( Math.abs(touchYDelta) < 50 || Math.abs(touchXDelta) > 80 ) return
 
       let defaultStyle = this.state.defaulScaleStyle
 
@@ -138,8 +165,6 @@ class Unsplash extends React.Component {
       } else {
         height = winHeight - touchYDelta
       }
-
-      //let height = winHeight - touchYDelta > winHeight ? winHeight : winHeight - touchYDelta
       
       let width = photoProportion * height
 
@@ -147,15 +172,6 @@ class Unsplash extends React.Component {
         width = winWidth
         height = winWidth / photoProportion
       }
-
-      let left = (photoProportion * height - winWidth) / -2
-
-      // let scaleStyle = {
-      //   top: 0,
-      //   height: spring(height),
-      //   left: spring(left),
-      //   width: spring(width)
-      // }
 
       let slideStyle = {
         top: 0,
@@ -165,10 +181,8 @@ class Unsplash extends React.Component {
       }
 
       this.setState({
-        // scaleStyle: scaleStyle,
         slideStyle: slideStyle,
       })
-
 
     }
 
@@ -179,11 +193,32 @@ class Unsplash extends React.Component {
     e.preventDefault()
     let touchobj = e.changedTouches[0]
     let touchY = touchobj.clientY
+    let touchX = touchobj.clientX
     let touchYDelta = touchY - firstTouchY
+    let touchXDelta = touchX - firstTouchX
 
-    if( Math.abs(touchYDelta) < 50 ) return
+    if ( Math.abs(touchXDelta) > 80 ) {
+      let slideTranX = this.state.slideTranX
 
-    if( touchYDelta < 0) {
+      if(touchXDelta > 0) {
+        slideTranX += winWidth
+      } else {
+        slideTranX -= winWidth
+      }
+
+      if (slideTranX < winWidth - slideWidth || slideTranX > 0) return
+
+      this.setState({
+        slideTranX: slideTranX
+      })
+
+      return
+    }
+
+    if ( Math.abs(touchYDelta) < 50 || slideState === 'crBlog' ) return
+
+    if ( touchYDelta < 0) {
+      slideState = 'crBlog'
       this.setState({
         slideStyle: {
           top: 0,
@@ -192,7 +227,8 @@ class Unsplash extends React.Component {
           width: slideWidth,
         }
       })
-    }else{
+    } else {
+      slideState = 'crImg'
       this.setState({
         slideStyle: {
           top: 0,
@@ -238,12 +274,14 @@ class Unsplash extends React.Component {
 
     let states = this.state
 
-    let pageStyle = states.showPhotoTilt ? {
-      opacity: 1,
-      pointerEvents: 'auto',
-    } : {
-      opacity: 0,
-      pointerEvents: 'none',
+    let pageStyle = {
+      // opacity: states.showPhotoTilt ? 1 : 0,
+      // pointerEvents: states.showPhotoTilt ? 'auto' : 'none',
+      visibility: states.showPhotoTilt ? 'visible' : 'hidden',
+    }
+
+    let containStyle = {
+      transform: `translateY(${states.pageTransY}px)`,
     }
 
     let transformStyle = states.scaleImg ? {
@@ -265,35 +303,43 @@ class Unsplash extends React.Component {
 
     let photoTilt = (
       <div className='un-photo-page' style={pageStyle}>
-        { states.defaulSlideStyle ? (
-          <Motion defaultStyle={states.defaulSlideStyle} style={states.slideStyle}>
-            {
-              interpolatingStyle => (
-                <div className='un-photo-slide-ul' style={interpolatingStyle}>
-                  {
-                    imageList.map((img, index)=>{
-                      let height = interpolatingStyle.height
-                      let slideImgStyle = {
-                        height: height,
-                        width: photoProportion * height,
-                        backgroundImage: `url(${img})`,
-                      }
+        <div className='un-photo-container' style={containStyle}>
+          { states.defaulSlideStyle ? (
+            <Motion defaultStyle={states.defaulSlideStyle} style={states.slideStyle}>
+              {
+                interpolatingStyle => (
+                  <div className='un-photo-slide-ul' style={{
+                    top: interpolatingStyle.top,
+                    left: interpolatingStyle.left,
+                    height: interpolatingStyle.height,
+                    width: interpolatingStyle.width,
+                    transform: `translate3d(${states.slideTranX}px, 0, 0)`
+                  }}>
+                    {
+                      imageList.map((img, index)=>{
+                        let height = interpolatingStyle.height
+                        let slideImgStyle = {
+                          height: height,
+                          width: photoProportion * height,
+                          backgroundImage: `url(${img})`,
+                        }
 
-                      return (
-                        <div key={index} className='un-photo-slide-li'>
-                          <div className='un-photo-slide-li-img' style={slideImgStyle}></div>
-                        </div>
-                      )
-                    })
-                  }
-                </div>
-              )
-            }
-          </Motion> ) : null
-        }
-        <div className={states.showPhotoTilt ? 'un-photo-blog un-show-blog' : 'un-photo-blog'}>
-          <div className='un-blog-content'>
-            
+                        return (
+                          <div key={index} className='un-photo-slide-li'>
+                            <div className='un-photo-slide-li-img' style={slideImgStyle}></div>
+                          </div>
+                        )
+                      })
+                    }
+                  </div>
+                )
+              }
+            </Motion> ) : null
+          }
+          <div className={states.showPhotoTilt ? 'un-photo-blog un-show-blog' : 'un-photo-blog'}>
+            <div className='un-blog-content' ref='blogBody'>
+              
+            </div>
           </div>
         </div>
       </div>
