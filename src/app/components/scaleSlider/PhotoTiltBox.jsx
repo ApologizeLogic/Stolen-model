@@ -55,6 +55,7 @@ class PhotoTiltBox extends React.Component {
 
   initMath() {
     imgNode = this.refs.tiltImg
+    barNode = this.refs.tiltBar
 
     viewPort = {
         winHeight: window.innerHeight,
@@ -72,6 +73,7 @@ class PhotoTiltBox extends React.Component {
     tiltBarWidth = viewPort.winWidth - tiltBarPadding
 
     tiltBarIndicatorWidth = (viewPort.winWidth * tiltBarWidth) / imgData.width
+    barNode.style.width = tiltBarIndicatorWidth + 'px'
 
     tiltCenterOffset = ((tiltBarWidth / 2) - (tiltBarIndicatorWidth / 2))
 
@@ -133,13 +135,19 @@ class PhotoTiltBox extends React.Component {
 
         this.updateImgPosition(pxToMove * -1)
 
+        this.updateTiltBar(tilt)
+
         window.requestAnimationFrame(this.photoTilt)
 
       }else{
-
         // this.updateImgPosition(0)  在结束时设置回居中属性
         imgNode.style.transform = "translateX(-50%)";
       }
+  }
+
+  updateTiltBar(tilt) {
+      let pxToMove = (tilt * ((tiltBarWidth - tiltBarIndicatorWidth) / 2)) / this.state.maxTilt;
+      setTranslateX(barNode, (tiltCenterOffset + pxToMove) );
   }
 
   updateImgPosition(pxToMove) {
@@ -153,7 +161,7 @@ class PhotoTiltBox extends React.Component {
     return (
       <div className='un-photo-slide-li'>
         <div className='un-photo-slide-li-img' onClick={this.handelTilt} ref='tiltImg' style={props.slideImgStyle}></div>
-        <div className="un-photo-bar" style={barStyle}>
+        <div className="un-photo-slide-li-bar">
           <div ref="tiltBar" className="un-bar-indicoter"></div>
         </div>
       </div>
