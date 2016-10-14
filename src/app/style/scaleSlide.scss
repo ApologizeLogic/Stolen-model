@@ -18,4 +18,34 @@
     visibility: visible;
   }
 
+  .un-photo-scale {
+    display: none;
+  }
+
+}
+
+.un-photo-slide-ul {
+  position: relative;
+  display: flex;
+  transition: transform .5s ease;
+
+  .un-photo-slide-li {
+    position: relative;
+    height: 100%;
+    width: 100vw;
+    overflow: hidden;
+
+    .un-photo-slide-li-img {
+      background-size: cover;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      // height: 100%;
+      transform: translateX(-50%);
+      background-position: 50%;
+    }
+  }
 }
