@@ -7,12 +7,13 @@ import '../../style/unsplash.scss';
 import '../../style/scaleSlide.scss'
 import TransitionEnd from '../../utils/transitionEnd'
 
-import img1 from '../../images/1.jpg'
-import img2 from '../../images/2.jpg'
+import img1 from '../../images/1.jpeg'
+import img2 from '../../images/2.jpeg'
 import img3 from '../../images/3.jpg'
 import img4 from '../../images/4.jpg'
 import img5 from '../../images/5.jpg'
 import img6 from '../../images/6.jpg'
+import img7 from '../../images/7.jpg'
 
 let imageList = [
   img1,
@@ -21,6 +22,7 @@ let imageList = [
   img4,
   img5,
   img6,
+  img7
 ]
 
 let winHeight = 0
@@ -33,6 +35,7 @@ let maxPageY = 0              // 页面所能移动的最大值
 let slideWidth = 0            // 图片 list 的总长度
 let slideState = 'crImg'      // 'crImg' 表示当前是全屏图片, 'crBlog' 表示当前转为 Blog 形式
 let imgCanDelea = true
+let transitionTime = 500
 let springConfig = {
   stiffness: 600,
   damping: 50,
@@ -67,13 +70,11 @@ class Unsplash extends React.Component {
       defaulScaleStyle : null,
       scaleStyle    : null,
       pageOpen      : false,
-      defaulSlideStyle: null,
+      defaulSlideStyle : null,
       slideStyle    : null,
       pageTransY    : 0,
       slideTranX    : 0,
-
-      curBox        : 0,
-      startPhotoTilt: false,
+      pageClass     : 'un-photo-page',
     }
   }
 
@@ -129,11 +130,16 @@ class Unsplash extends React.Component {
       scaleImg: img,
       defaulScaleStyle: defaulScaleStyle,
       scaleStyle: scaleStyle,
-      showPhotoTilt: true,
-
       defaulSlideStyle: defaulSlideStyle,
       slideStyle: slideStyle,
+      showPhotoTilt: true,
     })
+
+    setTimeout(()=>{
+      this.setState({
+        pageClass: 'un-photo-page un-aninma-out',
+      })
+    }, transitionTime)
   }
 
   winTouchStart(e) {
@@ -307,20 +313,19 @@ class Unsplash extends React.Component {
       transform: `translate3d(0, 0, 0)`,
     } : null
 
-    // { this.state.defaulScaleStyle ? (
-    //   <Motion defaultStyle={this.state.defaulScaleStyle} style={this.state.scaleStyle} onRest={this.hiddenPage}>
-    //     { 
-    //       interpolatingStyle => (
-    //         <div className='un-photo-scale' style={interpolatingStyle}>
-    //           <div className='un-photo-transform' style={transformStyle} onClick={this.handelImageClose}></div>
-    //         </div>
-    //       )
-    //     }
-    //   </Motion> ): null
-    // }
-
     let photoTilt = (
-      <div className='un-photo-page' ref='mgPage' style={pageStyle}>
+      <div className={states.pageClass} ref='mgPage' style={pageStyle}>
+        { this.state.defaulScaleStyle ? (
+          <Motion defaultStyle={this.state.defaulScaleStyle} style={this.state.scaleStyle} onRest={this.hiddenPage}>
+            { 
+              interpolatingStyle => (
+                <div className='un-photo-scale' style={interpolatingStyle}>
+                  <div className='un-photo-transform' style={transformStyle} onClick={this.handelImageClose}></div>
+                </div>
+              )
+            }
+          </Motion> ): null
+        }
         <div className='un-photo-container' style={containStyle}>
           { states.defaulSlideStyle ? (
             <Motion defaultStyle={states.defaulSlideStyle} style={states.slideStyle}>
@@ -356,7 +361,7 @@ class Unsplash extends React.Component {
               }
             </Motion> ) : null
           }
-          <div className={states.showPhotoTilt ? 'un-photo-blog un-show-blog' : 'un-photo-blog'}>
+          <div className='un-photo-blog'>
             <div className='un-blog-content' ref='blogBody'>
               
             </div>

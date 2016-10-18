@@ -2,6 +2,7 @@
   .un-photo-container {
     position: relative;
     width: 100%;
+    visibility: hidden;
     -webkit-transition: -webkit-transform 0.1s linear;
     transition: transform 0.1s linear;
     -webkit-backface-visibility: hidden;
@@ -16,7 +17,7 @@
     width: 100%;
     padding: 15px;
     transition: visibility .1s .5s ease;
-    visibility: hidden;
+    // visibility: hidden;
 
     .un-blog-content {
       height: 800px;
@@ -25,14 +26,22 @@
 
   }
 
-  .un-show-blog {
-    visibility: visible;
-  }
+  // .un-show-blog {
+  //   visibility: visible;
+  // }
 
+}
+
+.un-aninma-out {
   .un-photo-scale {
     display: none;
   }
-
+  .un-photo-container {
+    visibility: visible;
+  }
+  // .un-photo-blog {
+  //   visibility: visible;
+  // }
 }
 
 .un-photo-slide-ul {
