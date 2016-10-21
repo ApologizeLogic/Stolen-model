@@ -90,6 +90,7 @@ a {
   top: 0;
   left: 0;
   z-index: 1;
+  transition: transform .3s cubic-bezier(0.83, 0.01, 0.15, 1.01);
 
   .un-photo-transform {
     height: 100%;

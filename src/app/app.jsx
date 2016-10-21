@@ -4,12 +4,12 @@ import reactTapEventPlugin from 'react-tap-event-plugin'
 
 // import Main from './components/Main'
 // import List from './components/List'
-import Unsplash from './components/Unsplash'
+// import Unsplash from './components/Unsplash'
 // import UnsplashMotion from './components/scaleSlider/UnsplashMotion'
-// import LayerUnsplash from './components/scaleSlider/LayerUnsplash'
+import LayerUnsplash from './components/scaleSlider/LayerUnsplash'
 
 reactTapEventPlugin()
 
 ReactDOM.render((
-  <Unsplash />
+  <LayerUnsplash />
 ), document.getElementById('app'));
