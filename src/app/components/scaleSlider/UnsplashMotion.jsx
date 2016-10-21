@@ -78,6 +78,10 @@ class Unsplash extends React.Component {
     }
   }
 
+  getChildContext() {
+    return { name: "Jonas" }
+  }
+
   componentDidMount() {
     winHeight = window.innerHeight;
     winWidth = window.innerWidth;
@@ -320,7 +324,7 @@ class Unsplash extends React.Component {
             { 
               interpolatingStyle => (
                 <div className='un-photo-scale' style={interpolatingStyle}>
-                  <div className='un-photo-transform' style={transformStyle} onClick={this.handelImageClose}></div>
+                  <div className='un-photo-transform' style={transformStyle}></div>
                 </div>
               )
             }
@@ -372,19 +376,21 @@ class Unsplash extends React.Component {
 
     return (
       <div className='un-container'>
-        <div className='un-grid-single'>
-          <ImageList
-            imageList={imageList}
-            handelImage={this.handelImage}
-          >
-          </ImageList>
-        </div>
+        <ImageList
+          imageList={imageList}
+          handelImage={this.handelImage}
+        >
+        </ImageList>
         <span>
           {photoTilt}
         </span>
       </div>
     );
   }
+}
+
+Unsplash.childContextTypes = {
+  name: React.PropTypes.string,
 }
 
 export default Unsplash;
