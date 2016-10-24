@@ -27,17 +27,9 @@ class NewSlideList extends React.Component {
     let states = this.state
     let props = this.props
 
-    let curPageNum = props.curPageNum
-
-    if(curPageNum > props.imageList.length) {
-      curPageNum = props.imageList.length
-    } else if (curPageNum < 0) {
-      curPageNum = 0
-    }
-
     let maxStyle = {
       width: props.imageList.length * window.innerWidth,
-      transform: `translateX(${curPageNum * window.innerWidth * -1}px)`
+      transform: `translateX(${props.curPageNum * window.innerWidth * -1}px)`
     }
 
     return (
