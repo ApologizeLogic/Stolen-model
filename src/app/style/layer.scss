@@ -111,6 +111,20 @@ a {
   height: 100%;
   width: 100%;
 
+  .un-photo-background {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 1s ease;
+    z-index: 5;
+    background: -webkit-linear-gradient(top,rgba(0,0,0,.25),transparent 20%,transparent 60%,rgba(0,0,0,.3));
+    background: linear-gradient(180deg,rgba(0,0,0,.25) 0,transparent 20%,transparent 60%,rgba(0,0,0,.3));
+    pointer-events: none;
+  }
+
   .un-photo-slide-ul {
     position: relative;
     height: 100%;
@@ -180,7 +194,7 @@ a {
     opacity: 1;
     display: flex;
     justify-content: center;
-    z-index: 4;
+    z-index: 6;
     transition: opacity .3s ease;
 
     .un-nav-item {
@@ -228,7 +242,7 @@ a {
   width: 100%;
   z-index: 2;
   visibility: hidden;
-  transition: opacity 0s, visibility 0s;
+  transition: transform .1s ease, opacity 0s, visibility 0s;
 
   &:before {
     content: '';
@@ -266,6 +280,9 @@ a {
   .un-photo-blog {
     visibility: visible;
   }
+  .un-photo-background {
+    opacity: 1;
+  }
 }
 
 /***************** slide photo tilt 模式时 style *****************/
@@ -274,6 +291,9 @@ a {
     opacity: 1 !important;
   }
   .un-nav {
+    opacity: 0;
+  }
+  .un-photo-background {
     opacity: 0;
   }
 }

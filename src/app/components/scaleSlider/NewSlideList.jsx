@@ -62,6 +62,7 @@ class NewSlideList extends React.Component {
 
     return (
       <div className='un-photo-new-slide'>
+        <div className='un-photo-background'></div>
         <div className='un-photo-slide-ul' style={maxStyle}>
           {imageSlide}
         </div>
