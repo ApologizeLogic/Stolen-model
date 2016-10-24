@@ -22,36 +22,52 @@ class NewSlideList extends React.Component {
     return true
   }
 
+  itemClassName(index) {
+    if(index === this.props.curPageNum) return 'un-nav-item un-nav-item-current'
+    return 'un-nav-item'
+  }
+
   render() {
 
     let states = this.state
     let props = this.props
+    let imageSlide = []
+    let navItem = []
 
     let maxStyle = {
       width: props.imageList.length * window.innerWidth,
       transform: `translateX(${props.curPageNum * window.innerWidth * -1}px)`
     }
 
-    return (
-      <div className='un-photo-slide-ul' style={maxStyle}>
-        {
-          props.imageList.map((img, index)=>{
-            let height = window.innerHeight
-            let slideImgStyle = {
-              height: height,
-              width: props.photoProportion * height,
-              backgroundImage: `url(${img})`,
-            }
+    props.imageList.map((img, index)=>{
+      let height = window.innerHeight
+      let slideImgStyle = {
+        height: height,
+        width: props.photoProportion * height,
+        backgroundImage: `url(${img})`,
+      }
 
-            return (
-              <PhotoTiltBox 
-                key={index} 
-                slideImgStyle={slideImgStyle} 
-                >
-              </PhotoTiltBox>
-            )
-          })
-        }
+      imageSlide.push(
+        <PhotoTiltBox 
+          key={index} 
+          slideImgStyle={slideImgStyle} 
+          >
+        </PhotoTiltBox>
+      )
+
+      navItem.push(
+        <button key={index} className={this.itemClassName(index)}></button>
+      )
+    })
+
+    return (
+      <div className='un-photo-new-slide'>
+        <div className='un-photo-slide-ul' style={maxStyle}>
+          {imageSlide}
+        </div>
+        <div className='un-nav'>
+            {navItem}
+        </div>
       </div>
     );
   }

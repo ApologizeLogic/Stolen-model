@@ -20,6 +20,7 @@ let pageState = 'slide'                        // 分别表示几个状态 slide
 let maxTranslateY = 0                          // Blog Content 所能移动的最大值
 let contentMoveY = 0                           // 暂存 Blog Content 移动的 Y 轴值
 let runEndFun = true                           // 是否执行 TouchEnd 里的函数
+let canMove = true                             // 是否可以缩放切换模式
 
 function throttle(fn, delay) {
   let allowSample = true
@@ -73,7 +74,17 @@ class TouchPage extends React.Component {
   }
 
   startPhotoTilt(state) {
-    console.log(state)
+    if(state){
+      canMove = false
+      this.setState({
+        pageClass: 'un-photo-page un-slide-model un-tilt-model',
+      })
+    }else{
+      canMove = true
+      this.setState({
+        pageClass: 'un-photo-page un-slide-model',
+      })
+    }
   }
 
   imageScale(imageData, img) {
@@ -126,6 +137,8 @@ class TouchPage extends React.Component {
   }
 
   winTouchStart(e) {
+    if(!canMove) return
+
     let touchobj = e.changedTouches[0]
     firstTouchY = touchobj.clientY
     firstTouchX = touchobj.clientX
@@ -141,6 +154,8 @@ class TouchPage extends React.Component {
 
   winTouchMove(e) {
     e.preventDefault()
+    if(!canMove) return
+
     let moving = () => {
       let touchobj = e.changedTouches[0]
       let touchY = touchobj.clientY
@@ -243,6 +258,8 @@ class TouchPage extends React.Component {
   }
 
   winTouchEnd(e) {
+    if(!canMove) return
+
     let touchobj = e.changedTouches[0]
     let touchY = touchobj.clientY
     let touchX = touchobj.clientX
