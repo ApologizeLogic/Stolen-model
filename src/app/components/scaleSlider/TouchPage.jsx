@@ -33,7 +33,6 @@ class TouchPage extends React.Component {
   }
 
   shouldComponentUpdate(nextprops, nextstate) {
-    console.debug(nextprops, nextstate)
     return true
   }
 
@@ -50,21 +49,22 @@ class TouchPage extends React.Component {
       width: imageData.width,
     }
 
+    let curStyle = Object.assign({}, defaultScaleStyle, {
+      transform: `translate3d(0, ${imageTranslateY}px, 0) scale3d(${imageScale}, ${imageScale}, 1)`,
+    })
+
     this.setState({
       scaleImg: img,
-      scaleImageStyle: Object.assign(defaultScaleStyle, {
-        transform: `translate3d(0, ${imageTranslateY}px, 0) scale3d(${imageScale}, ${imageScale}, 1)`,
-      }),
+      scaleImageStyle: curStyle,
     })
 
   }
 
   imageScaleClose(e) {
     this.setState({
-      scaleImageStyle: Object.assign(defaultScaleStyle, {
-        transform: `translate3d(0, 0, 0) scale3d(1, 1, 1)`,
-      }),
+      scaleImageStyle: defaultScaleStyle,
     })
+
 
     TransitionEnd(e.target.parentElement, ()=>{
       this.context.closePage()
@@ -87,7 +87,7 @@ class TouchPage extends React.Component {
     } : null
 
     return (
-      <div className={states.pageClass} ref='mgPage' style={pageStyle}>
+      <div className={states.pageClass} style={pageStyle}>
         <div className='un-photo-scale' style={states.scaleImageStyle}>
           <div className='un-photo-transform' style={transformStyle} onClick={this.imageScaleClose}></div>
         </div>
