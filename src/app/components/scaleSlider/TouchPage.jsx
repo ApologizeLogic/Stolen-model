@@ -1,13 +1,16 @@
 import React from 'react'
 
 import TransitionEnd from '../../utils/transitionEnd'
+import NewSlideList from './NewSlideList'
 
 let winHeight = window.innerHeight
 let winWidth = window.innerWidth
 let imageMarginTop = 0                         // 记录图片距离top值
 let imageScale = 0                             // 记录图片需要放大的尺寸
 let imageTranslateY = 0                        // 记录图片移动的值
+let photoProportion = 0                        // 图片的宽高比
 let defaultScaleStyle = {}                     // 传入获取图片基础信息
+let newImageList = []
 
 class TouchPage extends React.Component {
   constructor(props, context) {
@@ -58,6 +61,17 @@ class TouchPage extends React.Component {
       scaleImageStyle: curStyle,
     })
 
+    newImageList = this.context.imageList.slice(0)
+    newImageList.splice(0, 0, img)
+
+    photoProportion = imageData.width/imageData.height
+
+    TransitionEnd(this.refs.scale, ()=>{
+      this.setState({
+        pageClass: 'un-photo-page un-slide-model',
+      })
+    })
+
   }
 
   imageScaleClose(e) {
@@ -65,8 +79,7 @@ class TouchPage extends React.Component {
       scaleImageStyle: defaultScaleStyle,
     })
 
-
-    TransitionEnd(e.target.parentElement, ()=>{
+    TransitionEnd(this.refs.scale, ()=>{
       this.context.closePage()
     })
 
@@ -88,7 +101,12 @@ class TouchPage extends React.Component {
 
     return (
       <div className={states.pageClass} style={pageStyle}>
-        <div className='un-photo-scale' style={states.scaleImageStyle}>
+        <NewSlideList
+          imageList={newImageList}
+          photoProportion={photoProportion}
+        >
+        </NewSlideList>
+        <div className='un-photo-scale' ref='scale' style={states.scaleImageStyle}>
           <div className='un-photo-transform' style={transformStyle} onClick={this.imageScaleClose}></div>
         </div>
       </div>
