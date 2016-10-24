@@ -188,6 +188,18 @@ a {
   }
 }
 
+.un-fake-scale {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 250px;
+  z-index: 1;
+  background-size: cover;
+  background-position: 50%;
+  visibility: hidden;
+}
+
 /***************** silde 模式时 style *****************/
 .un-slide-model {
   // .un-photo-scale {
@@ -218,6 +230,12 @@ a {
 /***************** blog 模式时 style *****************/
 .un-blog-model {
   .un-photo-blog {
+    visibility: visible;
+  }
+  .un-photo-scale {
+    visibility: hidden;
+  }
+  .un-fake-scale {
     visibility: visible;
   }
 }

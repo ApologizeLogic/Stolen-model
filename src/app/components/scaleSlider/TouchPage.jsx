@@ -17,6 +17,9 @@ let newImageList = []                          // 作为 slide 组件的 props �
 let scaleProportion = 0                        // 放大和触摸移动比例
 let translateProportion = 0                    // 移动和触摸比例
 let pageState = 'slide'                        // 分别表示几个状态 slide 模式、 blog 模式、 narrow 缩小、 enlarge 放大
+let maxTranslateY = 0                          // Blog Content 所能移动的最大值
+let contentMoveY = 0                           // 暂存 Blog Content 移动的 Y 轴值
+let runEndFun = true                           // 是否执行 TouchEnd 里的函数
 
 function throttle(fn, delay) {
   let allowSample = true
@@ -35,6 +38,7 @@ class TouchPage extends React.Component {
 
     this.imageScale = this.imageScale.bind(this)
     this.imageScaleClose = this.imageScaleClose.bind(this)
+    this.startPhotoTilt = this.startPhotoTilt.bind(this)
     this.winTouchStart = this.winTouchStart.bind(this)
     this.winTouchMove = this.winTouchMove.bind(this)
     this.winTouchEnd = this.winTouchEnd.bind(this)
@@ -59,6 +63,17 @@ class TouchPage extends React.Component {
 
   shouldComponentUpdate(nextprops, nextstate) {
     return true
+  }
+
+  getChildContext() {
+    return { 
+      pageState: pageState,
+      startPhotoTilt: this.startPhotoTilt,
+    }
+  }
+
+  startPhotoTilt(state) {
+    console.log(state)
   }
 
   imageScale(imageData, img) {
@@ -98,7 +113,6 @@ class TouchPage extends React.Component {
     mgPage.addEventListener('touchstart', this.winTouchStart)
     mgPage.addEventListener('touchmove', this.winTouchMove)
     mgPage.addEventListener('touchend', this.winTouchEnd)
-
   }
 
   imageScaleClose(e) {
@@ -118,6 +132,11 @@ class TouchPage extends React.Component {
 
     translateProportion = (imageMarginTop + imageTranslateY) / 250
     scaleProportion = (imageScale - 1) / 250
+
+    let blogContent = this.refs.blog
+    let blogContentData = blogContent.getBoundingClientRect()
+    maxTranslateY = winHeight - blogContentData.height
+    contentMoveY = this.state.contentMoveY
   }
 
   winTouchMove(e) {
@@ -129,6 +148,7 @@ class TouchPage extends React.Component {
       let touchYDelta = firstTouchY - touchY
       let touchXDelta = touchX - firstTouchX
 
+      // 从 slide 模式过渡到 blog 模式
       if( touchYDelta > 50 && pageState !== 'narrow' && pageState !== 'blog') {
         pageState = 'narrow'
         this.setState({
@@ -138,6 +158,7 @@ class TouchPage extends React.Component {
         return
       }
 
+      // 从 slide 模式过渡到 blog 模式, TouchMove 图片在缩小时
       if(pageState === 'narrow' && touchYDelta > 50 ) {
 
         let delVal = touchYDelta - 50
@@ -161,7 +182,8 @@ class TouchPage extends React.Component {
         return
       } 
 
-      if(pageState === 'blog' && touchYDelta < -50) {
+      // 从 blog 模式过渡到 slide 模式
+      if(pageState === 'blog' && runEndFun && touchYDelta < -50) {
         pageState = 'enlarge'
         this.setState({
           pageClass: 'un-photo-page un-enlarge-model',
@@ -169,6 +191,7 @@ class TouchPage extends React.Component {
         return
       }
 
+      // 从 blog 模式过渡到 slide 模式, TouchMove 图片在放大时
       if(pageState === 'enlarge' && touchYDelta < -50) {
 
         let delVal = touchYDelta * -1 - 50
@@ -192,6 +215,28 @@ class TouchPage extends React.Component {
         return
       }
 
+      // blog 模式时 移动 Blog Content
+      if(pageState === 'blog' && touchYDelta >= 0) {
+        let intli = Math.max( (contentMoveY - touchYDelta), maxTranslateY)
+        if(intli < 0) {
+          runEndFun = false
+        }
+        this.setState({
+          contentMoveY: intli
+        })
+        return
+      }
+      if(pageState === 'blog' && touchYDelta < 0) {
+        let intli2 = Math.min( (contentMoveY - touchYDelta), 0)
+        if(intli2 === 0) {
+          runEndFun = true
+        }
+        this.setState({
+          contentMoveY: intli2
+        })
+        return
+      }
+
     }
 
     throttle(moving(), 60)
@@ -207,7 +252,7 @@ class TouchPage extends React.Component {
     // 左右滑动时执行函数
     if( pageState === 'slide' && touchXDelta > 80 || pageState === 'slide' && touchXDelta < -80 ) {
       let curPageNum = this.state.curPageNum
-      
+
       if ( touchXDelta < 0 ){
         curPageNum++
       } else {
@@ -228,7 +273,7 @@ class TouchPage extends React.Component {
     } 
 
     // 上下移动缩小时执行
-    if(touchYDelta > 50){
+    if(touchYDelta > 50 && runEndFun){
       pageState = 'blog'
 
       this.setState({
@@ -248,7 +293,7 @@ class TouchPage extends React.Component {
     }
 
     // 上下移动时放大执行
-    if(touchYDelta < -50){
+    if(touchYDelta < -50 && runEndFun){
       pageState = 'slide'
 
       this.setState({
@@ -266,7 +311,6 @@ class TouchPage extends React.Component {
 
       return
     }
-
   }
 
   render() {
@@ -297,9 +341,10 @@ class TouchPage extends React.Component {
         <div className='un-photo-scale' ref='scale' style={states.scaleImageStyle}>
           <div className='un-photo-transform' style={transformStyle} onClick={this.imageScaleClose}></div>
         </div>
-        <div className='un-photo-blog' ref='blog'>
-          <div className='un-blog-content' style={contentStyle}></div>
+        <div className='un-photo-blog' ref='blog' style={contentStyle}>
+          <div className='un-blog-content'></div>
         </div>
+        <div className='un-fake-scale' style={transformStyle}></div>
       </div>
     );
   }
@@ -308,6 +353,11 @@ class TouchPage extends React.Component {
 TouchPage.contextTypes = {
   imageList: React.PropTypes.array,
   closePage: React.PropTypes.func,
+}
+
+TouchPage.childContextTypes = {
+  pageState: React.PropTypes.string,
+  startPhotoTilt: React.PropTypes.func
 }
 
 export default TouchPage;

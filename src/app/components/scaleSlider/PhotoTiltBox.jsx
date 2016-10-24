@@ -51,6 +51,7 @@ class PhotoTiltBox extends React.Component {
     }else{
       this.removeEventListeners()
     }
+    this.context.startPhotoTilt(tiltState)
   }
 
   initMath() {
@@ -129,7 +130,7 @@ class PhotoTiltBox extends React.Component {
 
       pxToMove = (tilt * centerOffset) / this.state.maxTilt
 
-      console.log(pxToMove)
+      console.debug(pxToMove)
 
       if(tiltState){
 
@@ -167,6 +168,10 @@ class PhotoTiltBox extends React.Component {
       </div>
     )
   }
+}
+
+PhotoTiltBox.contextTypes = {
+  startPhotoTilt: React.PropTypes.func
 }
 
 export default PhotoTiltBox;
