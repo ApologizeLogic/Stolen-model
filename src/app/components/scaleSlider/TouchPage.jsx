@@ -16,7 +16,7 @@ let newImageList = []                          // 作为 slide 组件的 props �
 
 let scaleProportion = 0                        // 放大和触摸移动比例
 let translateProportion = 0                    // 移动和触摸比例
-let pageState = 'slide'
+let pageState = 'slide'                        // 分别表示几个状态 slide 模式、 blog 模式、 narrow 缩小、 enlarge 放大
 
 function throttle(fn, delay) {
   let allowSample = true
@@ -43,6 +43,7 @@ class TouchPage extends React.Component {
       pageClass:       'un-photo-page',
       scaleImg:        null,
       scaleImageStyle: null,
+      curPageNum:      0,
     }
   }
 
@@ -130,11 +131,12 @@ class TouchPage extends React.Component {
       if( touchYDelta > 50 && pageState !== 'narrow' && pageState !== 'blog') {
         this.setState({
           pageClass: 'un-photo-page un-narrow-model',
+          scaleImg: newImageList[this.state.curPageNum],
         })
         pageState = 'narrow'
       }
 
-      if(pageState === 'narrow') {
+      if(pageState === 'narrow' && touchYDelta > 50 ) {
 
         let delVal = touchYDelta - 50
         let scaleStyle = Object.assign({}, defaultScaleStyle, {
@@ -168,9 +170,22 @@ class TouchPage extends React.Component {
     let touchYDelta = firstTouchY - touchY
     let touchXDelta = touchX - firstTouchX
 
+    if( touchXDelta > 80 || touchXDelta < -80 && pageState === 'slide' ) {
+      let curPageNum = this.state.curPageNum
+      if ( touchXDelta < 0 ){
+        curPageNum++
+      } else {
+        curPageNum--
+      }
+      this.setState({
+        curPageNum: curPageNum
+      })
+      return
+    } 
+
     if(touchYDelta > 50){
       pageState = 'blog'
-      
+
       this.setState({
         scaleImageStyle: Object.assign({}, defaultScaleStyle, {
           transform: `translate3d(0, ${imageMarginTop * -1}px, 0) scale3d(1, 1, 1)`,
@@ -206,6 +221,7 @@ class TouchPage extends React.Component {
         <NewSlideList
           imageList={newImageList}
           photoProportion={photoProportion}
+          curPageNum={this.state.curPageNum}
         >
         </NewSlideList>
         <div className='un-photo-scale' ref='scale' style={states.scaleImageStyle}>

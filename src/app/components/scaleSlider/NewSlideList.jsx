@@ -18,7 +18,7 @@ class NewSlideList extends React.Component {
   }
 
   shouldComponentUpdate(nextprops, nextstate) {
-    if(nextprops.photoProportion === this.props.photoProportion) return false
+    if(nextprops.photoProportion === this.props.photoProportion && nextprops.curPageNum === this.props.curPageNum) return false
     return true
   }
 
@@ -27,8 +27,17 @@ class NewSlideList extends React.Component {
     let states = this.state
     let props = this.props
 
+    let curPageNum = props.curPageNum
+
+    if(curPageNum > props.imageList.length) {
+      curPageNum = props.imageList.length
+    } else if (curPageNum < 0) {
+      curPageNum = 0
+    }
+
     let maxStyle = {
-      width: props.imageList.length * window.innerWidth
+      width: props.imageList.length * window.innerWidth,
+      transform: `translateX(${curPageNum * window.innerWidth * -1}px)`
     }
 
     console.log('NewSlideList render')
