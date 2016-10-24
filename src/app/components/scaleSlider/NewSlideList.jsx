@@ -40,8 +40,6 @@ class NewSlideList extends React.Component {
       transform: `translateX(${curPageNum * window.innerWidth * -1}px)`
     }
 
-    console.log('NewSlideList render')
-
     return (
       <div className='un-photo-slide-ul' style={maxStyle}>
         {

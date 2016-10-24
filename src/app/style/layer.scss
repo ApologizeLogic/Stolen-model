@@ -154,8 +154,8 @@ a {
 
     .un-photo-slide-li-img,
     .un-photo-slide-li-bar {
-        -webkit-transition: -webkit-transform 0.2s linear;
-        transition: transform 0.2s linear;
+        -webkit-transition: -webkit-transform 0.1s linear;
+        transition: transform 0.1s linear;
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
         -webkit-perspective: 1000;
@@ -187,6 +187,7 @@ a {
   }
 }
 
+/***************** silde 模式时 style *****************/
 .un-slide-model {
   // .un-photo-scale {
   //   visibility: hidden;
@@ -199,12 +200,21 @@ a {
   }
 }
 
+/***************** narrow 模式时 style *****************/
 .un-narrow-model {
   .un-photo-blog {
     visibility: visible;
   }
 }
 
+/***************** enlarge 模式时 style *****************/
+.un-enlarge-model {
+  .un-photo-blog {
+    visibility: visible;
+  }
+}
+
+/***************** blog 模式时 style *****************/
 .un-blog-model {
   .un-photo-blog {
     visibility: visible;

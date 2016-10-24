@@ -16,6 +16,7 @@ let newImageList = []                          // 作为 slide 组件的 props �
 
 let scaleProportion = 0                        // 放大和触摸移动比例
 let translateProportion = 0                    // 移动和触摸比例
+let translateProportion2 = 0                   // 放大时移动和触摸比例
 let pageState = 'slide'                        // 分别表示几个状态 slide 模式、 blog 模式、 narrow 缩小、 enlarge 放大
 
 function throttle(fn, delay) {
@@ -117,6 +118,7 @@ class TouchPage extends React.Component {
 
     translateProportion = imageMarginTop / 250
     scaleProportion = (imageScale - 1) / 250
+    translateProportion2 = (imageTranslateY + imageMarginTop) / 250
   }
 
   winTouchMove(e) {
@@ -129,11 +131,12 @@ class TouchPage extends React.Component {
       let touchXDelta = touchX - firstTouchX
 
       if( touchYDelta > 50 && pageState !== 'narrow' && pageState !== 'blog') {
+        pageState = 'narrow'
         this.setState({
           pageClass: 'un-photo-page un-narrow-model',
-          scaleImg: newImageList[this.state.curPageNum],
+          // scaleImg: newImageList[this.state.curPageNum],
         })
-        pageState = 'narrow'
+        return
       }
 
       if(pageState === 'narrow' && touchYDelta > 50 ) {
@@ -143,6 +146,7 @@ class TouchPage extends React.Component {
           transform: `translate3d(0, ${delVal * translateProportion * -1}px, 0) scale3d(${imageScale - delVal * scaleProportion}, ${imageScale - delVal * scaleProportion}, 1)`,
           transition: `transform .1s linear`,
         })
+
         if(delVal >= 250) {
           pageState = 'blog'
           scaleStyle = Object.assign({}, defaultScaleStyle, {
@@ -150,11 +154,42 @@ class TouchPage extends React.Component {
             transition: `transform .1s linear`,
           })
         }
+
         this.setState({
           scaleImageStyle: scaleStyle
         })
 
-      }else if (pageState === 'blog') {
+        return
+      } 
+
+      if(pageState === 'blog' && touchYDelta < -50) {
+        pageState = 'enlarge'
+        this.setState({
+          pageClass: 'un-photo-page un-enlarge-model',
+        })
+        return
+      }
+
+      if(pageState === 'enlarge' && touchYDelta < -50) {
+
+        let delVal = touchYDelta * -1 - 50
+        let scaleStyle = Object.assign({}, defaultScaleStyle, {
+          transform: `translate3d(0, ${delVal * translateProportion2 - imageMarginTop}px, 0) scale3d(${1 + delVal * scaleProportion}, ${1 + delVal * scaleProportion}, 1)`,
+          transition: `transform .1s linear`,
+        })
+
+        if(delVal >= 250) {
+          pageState = 'slide'
+          scaleStyle = Object.assign({}, defaultScaleStyle, {
+            transform: `translate3d(0, ${imageTranslateY}px, 0) scale3d(${imageScale}, ${imageScale}, 1)`,
+            transition: `transform .1s linear`,
+          })
+        }
+
+        this.setState({
+          scaleImageStyle: scaleStyle
+        })
+
         return
       }
 
@@ -170,7 +205,8 @@ class TouchPage extends React.Component {
     let touchYDelta = firstTouchY - touchY
     let touchXDelta = touchX - firstTouchX
 
-    if( touchXDelta > 80 || touchXDelta < -80 && pageState === 'slide' ) {
+    // 左右滑动时执行函数
+    if( pageState === 'slide' && touchXDelta > 80 || pageState === 'slide' && touchXDelta < -80 ) {
       let curPageNum = this.state.curPageNum
       if ( touchXDelta < 0 ){
         curPageNum++
@@ -178,11 +214,13 @@ class TouchPage extends React.Component {
         curPageNum--
       }
       this.setState({
-        curPageNum: curPageNum
+        curPageNum: curPageNum,
+        scaleImg: newImageList[curPageNum],
       })
       return
     } 
 
+    // 上下移动缩小时执行
     if(touchYDelta > 50){
       pageState = 'blog'
 
@@ -198,6 +236,28 @@ class TouchPage extends React.Component {
           pageClass: 'un-photo-page un-blog-model',
         })
       })
+
+      return
+    }
+
+    // 上下移动时放大执行
+    if(touchYDelta < -50){
+      pageState = 'slide'
+
+      this.setState({
+        scaleImageStyle: Object.assign({}, defaultScaleStyle, {
+          transform: `translate3d(0, ${imageTranslateY}px, 0) scale3d(${imageScale}, ${imageScale}, 1)`,
+          transition: `transform .3s ease`,
+        }),
+      })
+
+      TransitionEnd(this.refs.scale, ()=>{
+        this.setState({
+          pageClass: 'un-photo-page un-slide-model',
+        })
+      })
+
+      return
     }
 
   }
@@ -213,7 +273,7 @@ class TouchPage extends React.Component {
 
     let transformStyle = states.scaleImg ? {
       backgroundImage: `url(${states.scaleImg})`,
-      transform: `translate3d(0, 0, 0)`,
+      // transform: `translate3d(0, 0, 0)`,
     } : null
 
     return (
