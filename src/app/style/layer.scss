@@ -90,6 +90,10 @@ a {
   left: 0;
   z-index: 3;
   transition: transform .3s cubic-bezier(0.83, 0.01, 0.15, 1.01);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
 
   .un-photo-transform {
     height: 100%;
@@ -160,11 +164,49 @@ a {
   }
 }
 
+.un-photo-blog {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  visibility: hidden;
+  transition: opacity 0s, visibility 0s;
+
+  &:before {
+    content: '';
+    display: block;
+    height: 250px;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .un-blog-content {
+    height: 600px;
+    background-color: #fff;
+  }
+}
+
 .un-slide-model {
   // .un-photo-scale {
   //   visibility: hidden;
   // }
   .un-photo-slide-ul {
+    visibility: visible;
+  }
+  .un-photo-blog {
+    visibility: visible;
+  }
+}
+
+.un-narrow-model {
+  .un-photo-blog {
+    visibility: visible;
+  }
+}
+
+.un-blog-model {
+  .un-photo-blog {
     visibility: visible;
   }
 }

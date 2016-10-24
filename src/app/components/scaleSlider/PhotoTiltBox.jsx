@@ -35,7 +35,7 @@ class PhotoTiltBox extends React.Component {
   }
 
   shouldComponentUpdate(nextprops, nextstate) {
-    return true
+    return false
   }
 
   componentWillReceiveProps(nextProps) {

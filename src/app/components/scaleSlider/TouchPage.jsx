@@ -5,12 +5,29 @@ import NewSlideList from './NewSlideList'
 
 let winHeight = window.innerHeight
 let winWidth = window.innerWidth
-let imageMarginTop = 0                         // 记录图片距离top值
+let firstTouchY = 0
+let firstTouchX = 0
+let imageMarginTop = 0                         // 记录图片距离 top 值
 let imageScale = 0                             // 记录图片需要放大的尺寸
 let imageTranslateY = 0                        // 记录图片移动的值
 let photoProportion = 0                        // 图片的宽高比
 let defaultScaleStyle = {}                     // 传入获取图片基础信息
-let newImageList = []
+let newImageList = []                          // 作为 slide 组件的 props 传入
+
+let scaleProportion = 0                        // 放大和触摸移动比例
+let translateProportion = 0                    // 移动和触摸比例
+let pageState = 'slide'
+
+function throttle(fn, delay) {
+  let allowSample = true
+  return function(e) {
+    if (allowSample) {
+      allowSample = false
+      setTimeout(function() { allowSample = true }, delay)
+      fn(e)
+    }
+  }
+}
 
 class TouchPage extends React.Component {
   constructor(props, context) {
@@ -18,6 +35,9 @@ class TouchPage extends React.Component {
 
     this.imageScale = this.imageScale.bind(this)
     this.imageScaleClose = this.imageScaleClose.bind(this)
+    this.winTouchStart = this.winTouchStart.bind(this)
+    this.winTouchMove = this.winTouchMove.bind(this)
+    this.winTouchEnd = this.winTouchEnd.bind(this)
 
     this.state = {
       pageClass:       'un-photo-page',
@@ -72,6 +92,11 @@ class TouchPage extends React.Component {
       })
     })
 
+    let mgPage = this.refs.page
+    mgPage.addEventListener('touchstart', this.winTouchStart)
+    mgPage.addEventListener('touchmove', this.winTouchMove)
+    mgPage.addEventListener('touchend', this.winTouchEnd)
+
   }
 
   imageScaleClose(e) {
@@ -82,6 +107,83 @@ class TouchPage extends React.Component {
     TransitionEnd(this.refs.scale, ()=>{
       this.context.closePage()
     })
+  }
+
+  winTouchStart(e) {
+    let touchobj = e.changedTouches[0]
+    firstTouchY = touchobj.clientY
+    firstTouchX = touchobj.clientX
+
+    translateProportion = imageMarginTop / 250
+    scaleProportion = (imageScale - 1) / 250
+  }
+
+  winTouchMove(e) {
+    e.preventDefault()
+    let moving = () => {
+      let touchobj = e.changedTouches[0]
+      let touchY = touchobj.clientY
+      let touchX = touchobj.clientX
+      let touchYDelta = firstTouchY - touchY
+      let touchXDelta = touchX - firstTouchX
+
+      if( touchYDelta > 50 && pageState !== 'narrow' && pageState !== 'blog') {
+        this.setState({
+          pageClass: 'un-photo-page un-narrow-model',
+        })
+        pageState = 'narrow'
+      }
+
+      if(pageState === 'narrow') {
+
+        let delVal = touchYDelta - 50
+        let scaleStyle = Object.assign({}, defaultScaleStyle, {
+          transform: `translate3d(0, ${delVal * translateProportion * -1}px, 0) scale3d(${imageScale - delVal * scaleProportion}, ${imageScale - delVal * scaleProportion}, 1)`,
+          transition: `transform .1s linear`,
+        })
+        if(delVal >= 250) {
+          pageState = 'blog'
+          scaleStyle = Object.assign({}, defaultScaleStyle, {
+            transform: `translate3d(0, ${imageMarginTop * -1}px, 0) scale3d(1, 1, 1)`,
+            transition: `transform .1s linear`,
+          })
+        }
+        this.setState({
+          scaleImageStyle: scaleStyle
+        })
+
+      }else if (pageState === 'blog') {
+        return
+      }
+
+    }
+
+    throttle(moving(), 60)
+  }
+
+  winTouchEnd(e) {
+    let touchobj = e.changedTouches[0]
+    let touchY = touchobj.clientY
+    let touchX = touchobj.clientX
+    let touchYDelta = firstTouchY - touchY
+    let touchXDelta = touchX - firstTouchX
+
+    if(touchYDelta > 50){
+      pageState = 'blog'
+      
+      this.setState({
+        scaleImageStyle: Object.assign({}, defaultScaleStyle, {
+          transform: `translate3d(0, ${imageMarginTop * -1}px, 0) scale3d(1, 1, 1)`,
+          transition: `transform .3s ease`,
+        }),
+      })
+
+      TransitionEnd(this.refs.scale, ()=>{
+        this.setState({
+          pageClass: 'un-photo-page un-blog-model',
+        })
+      })
+    }
 
   }
 
@@ -100,7 +202,7 @@ class TouchPage extends React.Component {
     } : null
 
     return (
-      <div className={states.pageClass} style={pageStyle}>
+      <div className={states.pageClass} ref='page' style={pageStyle}>
         <NewSlideList
           imageList={newImageList}
           photoProportion={photoProportion}
@@ -108,6 +210,9 @@ class TouchPage extends React.Component {
         </NewSlideList>
         <div className='un-photo-scale' ref='scale' style={states.scaleImageStyle}>
           <div className='un-photo-transform' style={transformStyle} onClick={this.imageScaleClose}></div>
+        </div>
+        <div className='un-photo-blog'>
+          <div className='un-blog-content'></div>
         </div>
       </div>
     );
