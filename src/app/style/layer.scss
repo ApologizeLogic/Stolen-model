@@ -82,6 +82,20 @@ a {
   position: fixed;
   z-index: 1;
   overflow: hidden;
+  transition: transform .5s ease;
+  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+
+  .un-back-buttom {
+    position: absolute;
+    margin: 17px;
+    z-index: 7;
+    color: #fff;
+    opacity: 1;
+    font-size: 30px;
+    background: hsla(0, 0%, 0%, 0.53);
+    border-radius: 50%;
+    transition: opacity .5s ease;
+  }
 }
 
 .un-photo-scale {
@@ -173,8 +187,8 @@ a {
 
       .un-photo-slide-li-img,
       .un-photo-slide-li-bar {
-          -webkit-transition: -webkit-transform 0.1s linear;
-          transition: transform 0.1s linear;
+          -webkit-transition: -webkit-transform 0.2s linear;
+          transition: transform 0.2s linear;
           -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
           -webkit-perspective: 1000;
@@ -283,6 +297,9 @@ a {
   .un-photo-background {
     opacity: 1;
   }
+  .un-back-buttom {
+    opacity: 1;
+  }
 }
 
 /***************** slide photo tilt 模式时 style *****************/
@@ -319,6 +336,19 @@ a {
   }
   .un-photo-scale {
     visibility: hidden;
+  }
+  .un-fake-scale {
+    visibility: visible;
+  }
+  .un-back-buttom {
+    opacity: 1;
+  }
+}
+
+/***************** touch page transform 时 style *****************/
+.un-page-trans {
+  .un-photo-blog {
+    visibility: visible;
   }
   .un-fake-scale {
     visibility: visible;

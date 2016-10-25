@@ -50,6 +50,7 @@ class TouchPage extends React.Component {
       scaleImageStyle: null,
       curPageNum:      0,
       contentMoveY:    0,
+      pageTrans:       false,
     }
   }
 
@@ -127,13 +128,32 @@ class TouchPage extends React.Component {
   }
 
   imageScaleClose(e) {
-    this.setState({
-      scaleImageStyle: defaultScaleStyle,
-    })
+    if(pageState === 'slide' && this.state.curPageNum === 0) {
+      this.setState({
+        pageClass: 'un-photo-page',
+        scaleImageStyle: defaultScaleStyle,
+      })
 
-    TransitionEnd(this.refs.scale, ()=>{
-      this.context.closePage()
-    })
+      TransitionEnd(this.refs.scale, ()=>{
+        this.context.closePage()
+      })
+    } else {
+      this.setState({
+        pageClass: 'un-photo-page un-page-trans',
+        pageTrans: true
+      })
+
+      TransitionEnd(this.refs.page, ()=>{
+        pageState = 'slide'
+        this.context.closePage()
+        this.setState({
+          pageClass: 'un-photo-page',
+          curPageNum: 0,
+          scaleImageStyle: defaultScaleStyle,
+          pageTrans: false
+        })
+      })
+    }
   }
 
   winTouchStart(e) {
@@ -337,9 +357,15 @@ class TouchPage extends React.Component {
 
     let pageStyle = {
       visibility: props.showPhotoTilt ? 'visible' : 'hidden',
+      transform: states.pageTrans ? `translate3d(100%, 0, 0)` : `translate3d(0, 0, 0)`
     }
 
     let transformStyle = states.scaleImg ? {
+      backgroundImage: `url(${states.scaleImg})`,
+    } : null
+
+    let fakeTransformStyle = states.scaleImg ? {
+      height: defaultScaleStyle.height,
       backgroundImage: `url(${states.scaleImg})`,
     } : null
 
@@ -349,6 +375,9 @@ class TouchPage extends React.Component {
 
     return (
       <div className={states.pageClass} ref='page' style={pageStyle}>
+        <div className='un-back-buttom' onClick={this.imageScaleClose}>
+          <i className='icon-circle-left'></i>
+        </div>
         <NewSlideList
           imageList={newImageList}
           photoProportion={photoProportion}
@@ -356,12 +385,12 @@ class TouchPage extends React.Component {
         >
         </NewSlideList>
         <div className='un-photo-scale' ref='scale' style={states.scaleImageStyle}>
-          <div className='un-photo-transform' style={transformStyle} onClick={this.imageScaleClose}></div>
+          <div className='un-photo-transform' style={transformStyle}></div>
         </div>
         <div className='un-photo-blog' ref='blog' style={contentStyle}>
           <div className='un-blog-content'></div>
         </div>
-        <div className='un-fake-scale' style={transformStyle}></div>
+        <div className='un-fake-scale' style={fakeTransformStyle}></div>
       </div>
     );
   }

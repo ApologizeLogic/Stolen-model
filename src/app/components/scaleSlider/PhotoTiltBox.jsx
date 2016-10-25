@@ -35,7 +35,8 @@ class PhotoTiltBox extends React.Component {
   }
 
   shouldComponentUpdate(nextprops, nextstate) {
-    return false
+    if(nextprops.slideImgStyle.backgroundImage === this.props.slideImgStyle.backgroundImage) return false
+    return true
   }
 
   componentWillReceiveProps(nextProps) {
