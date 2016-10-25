@@ -90,6 +90,9 @@ class TouchPage extends React.Component {
 
   imageScale(imageData, img) {
     // let imageData = this.props.imageData
+    winHeight = window.innerHeight
+    winWidth = window.innerWidth
+    
     imageMarginTop = imageData.top
     imageScale = winHeight / imageData.height
     imageTranslateY = winHeight/2 - (imageData.top + imageData.height/2 )
@@ -140,7 +143,8 @@ class TouchPage extends React.Component {
     } else {
       this.setState({
         pageClass: 'un-photo-page un-page-trans',
-        pageTrans: true
+        contentMoveY: 0,
+        pageTrans: true,
       })
 
       TransitionEnd(this.refs.page, ()=>{
@@ -365,7 +369,9 @@ class TouchPage extends React.Component {
     } : null
 
     let fakeTransformStyle = states.scaleImg ? {
-      height: defaultScaleStyle.height,
+      // 暂时无效 需要同 :before 一同修改
+      // height: defaultScaleStyle.height,
+      transform: `translateY(${states.contentMoveY/3}px)`,
       backgroundImage: `url(${states.scaleImg})`,
     } : null
 
