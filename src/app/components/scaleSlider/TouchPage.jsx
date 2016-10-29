@@ -113,8 +113,9 @@ class TouchPage extends React.Component {
       scaleImageStyle: curStyle,
     })
 
-    newImageList = this.context.imageList.slice(0)
-    newImageList.splice(0, 0, img)
+    let curNews = this.context.demoData[this.props.curKey]
+    newImageList = curNews.detail.srcList
+    // newImageList.splice(0, 0, img)
 
     photoProportion = imageData.width/imageData.height
 
@@ -404,6 +405,7 @@ class TouchPage extends React.Component {
 
 TouchPage.contextTypes = {
   imageList: React.PropTypes.array,
+  demoData: React.PropTypes.array,
   closePage: React.PropTypes.func,
 }
 

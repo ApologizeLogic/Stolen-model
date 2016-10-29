@@ -17,8 +17,8 @@ class ImageList extends React.Component {
     return false
   }
 
-  handelImage(e, img) {
-    this.props.handelImage(e, img)
+  handelImage(e, img, key) {
+    this.props.handelImage(e, img, key)
   }
 
   render() {
@@ -28,16 +28,19 @@ class ImageList extends React.Component {
     return (
       <div className='un-grid-single'>
         {
-          props.imageList.map((img, index)=>{
+          props.demoData.map((news, index)=>{
             
+            let imgUrl = news.detail.srcList[0]
+            if(!imgUrl) return
+              
             let imgDom = new Image()
-                imgDom.src = img
+                imgDom.src = imgUrl
             let naturalWidth = imgDom.width
             let naturalHeight = imgDom.height
             let realHeight = winWidth * ( naturalHeight / naturalWidth )
 
             let bgStyle = {
-              backgroundImage: `url(${img})`,
+              backgroundImage: `url(${imgUrl})`,
               height: realHeight || 250,                   // 需要检测图片原始高度再根据高宽比显示
             }
             return (
@@ -48,7 +51,7 @@ class ImageList extends React.Component {
                     <div className='un-grid-name'>Evan Kirby</div>
                   </span>
                 </div>
-                <div className='un-grid-image' style={bgStyle} onClick={(e) => this.handelImage(e, img)}>
+                <div className='un-grid-image' style={bgStyle} onClick={(e) => this.handelImage(e, imgUrl, index)}>
                 </div>
               </div>
             )

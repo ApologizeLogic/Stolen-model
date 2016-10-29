@@ -2,6 +2,7 @@ import React from 'react'
 import { spring, Motion, presets } from 'react-motion';
 import ImageList from './ImageList'
 import TouchPage from './TouchPage'
+import dataJson from '../../json/demo.js'
 
 import '../../style/layer.scss'
 
@@ -23,6 +24,8 @@ let imageList = [
   img7
 ]
 
+let demoData = dataJson
+
 class LayerUnsplash extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -34,12 +37,14 @@ class LayerUnsplash extends React.Component {
       showPhotoTilt : false,
       scaleImg      : null,
       imageData     : null,
+      curKey        : 0,
     }
   }
 
   getChildContext() {
     return { 
       imageList: imageList,
+      demoData: demoData,
       closePage: this.handelImageClose,
     }
   }
@@ -47,7 +52,7 @@ class LayerUnsplash extends React.Component {
   componentDidMount() {
   }
 
-  handelImage(e, img) {
+  handelImage(e, img, key) {
     e.preventDefault()
 
     let imageData = e.target.getBoundingClientRect()
@@ -56,6 +61,7 @@ class LayerUnsplash extends React.Component {
       showPhotoTilt: true,
       imageData: imageData,
       scaleImg: img,
+      curKey: key,
     })
   }
 
@@ -73,6 +79,7 @@ class LayerUnsplash extends React.Component {
       <div className='un-container'>
         <ImageList
           imageList={imageList}
+          demoData={demoData}
           handelImage={this.handelImage}
         >
         </ImageList>
@@ -81,6 +88,7 @@ class LayerUnsplash extends React.Component {
             showPhotoTilt={states.showPhotoTilt}
             imgSrc={states.scaleImg}
             imageData={states.imageData}
+            curKey={states.curKey}
           >
           </TouchPage>
         </span>
@@ -91,6 +99,7 @@ class LayerUnsplash extends React.Component {
 
 LayerUnsplash.childContextTypes = {
   imageList: React.PropTypes.array,
+  demoData: React.PropTypes.array,
   closePage: React.PropTypes.func,
 }
 
