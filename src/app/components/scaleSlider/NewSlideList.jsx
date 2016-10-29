@@ -18,7 +18,7 @@ class NewSlideList extends React.Component {
   }
 
   shouldComponentUpdate(nextprops, nextstate) {
-    if(nextprops.photoProportion === this.props.photoProportion && nextprops.curPageNum === this.props.curPageNum && nextprops.imageList[0] === this.props.imageList[0]) return false
+    if(nextprops.photoProportion === this.props.photoProportion && nextprops.curPageNum === this.props.curPageNum && nextprops.curKey === this.props.curKey) return false
     return true
   }
 

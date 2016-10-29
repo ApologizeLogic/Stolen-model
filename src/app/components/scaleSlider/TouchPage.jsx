@@ -59,7 +59,7 @@ class TouchPage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.showPhotoTilt){
-      this.imageScale(nextProps.imageData, nextProps.imgSrc)
+      this.imageScale(nextProps.imageData, nextProps.imgSrc, nextProps.curKey)
     }
   }
 
@@ -88,7 +88,7 @@ class TouchPage extends React.Component {
     }
   }
 
-  imageScale(imageData, img) {
+  imageScale(imageData, img, curKey) {
     // let imageData = this.props.imageData
     winHeight = window.innerHeight
     winWidth = window.innerWidth
@@ -113,7 +113,7 @@ class TouchPage extends React.Component {
       scaleImageStyle: curStyle,
     })
 
-    let curNews = this.context.demoData[this.props.curKey]
+    let curNews = this.context.demoData[curKey]
     newImageList = curNews.detail.srcList
     // newImageList.splice(0, 0, img)
 
@@ -389,6 +389,7 @@ class TouchPage extends React.Component {
           imageList={newImageList}
           photoProportion={photoProportion}
           curPageNum={states.curPageNum}
+          curKey={props.curKey}
         >
         </NewSlideList>
         <div className='un-photo-scale' ref='scale' style={states.scaleImageStyle}>
