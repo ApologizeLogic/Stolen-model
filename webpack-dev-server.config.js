@@ -55,7 +55,14 @@ var config = {
         test: /\.scss$/, 
         loader: ExtractTextPlugin.extract("style", "css!sass") 
       },
-      { test: /\.(jpe?g|svg|jpg)$/, loader: "file-loader" }
+      {
+        test: /\.(woff|woff2|svg|eot|ttf)\??.*$/,
+        loader: 'file?name=./static/fonts/[name].[ext]'
+      },
+      { 
+        test: /\.(jpe?g|svg|jpg)$/, 
+        loader: "file-loader" 
+      }
     ]
   }
 };
