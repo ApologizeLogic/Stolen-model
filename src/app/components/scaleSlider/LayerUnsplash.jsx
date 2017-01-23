@@ -1,5 +1,5 @@
 import React from 'react'
-import { spring, Motion, presets } from 'react-motion';
+// import { spring, Motion, presets } from 'react-motion';
 import ImageList from './ImageList'
 import TouchPage from './TouchPage'
 import dataJson from '../../json/demo.js'
@@ -72,6 +72,8 @@ class LayerUnsplash extends React.Component {
   }
 
   render() {
+
+    console.log('mainLayer render')
 
     let states = this.state
 

@@ -357,6 +357,8 @@ class TouchPage extends React.Component {
 
   render() {
 
+    console.log('TouchPage render')
+
     let states = this.state
     let props = this.props
 

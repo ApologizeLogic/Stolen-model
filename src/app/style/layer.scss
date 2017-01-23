@@ -1,3 +1,4 @@
+// 引入 icoom font
 @import "style";
 
 * {
@@ -191,8 +192,8 @@ a {
 
       .un-photo-slide-li-img,
       .un-photo-slide-li-bar {
-          -webkit-transition: -webkit-transform 0.2s ease;
-          transition: transform 0.2s ease;
+          // -webkit-transition: -webkit-transform 0.2s ease;
+          // transition: transform 0.2s ease;
           -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
           -webkit-perspective: 1000;

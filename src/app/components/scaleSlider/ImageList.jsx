@@ -22,6 +22,9 @@ class ImageList extends React.Component {
   }
 
   render() {
+
+    console.log('ImageList render')
+
     let props = this.props
     let states = this.state
 

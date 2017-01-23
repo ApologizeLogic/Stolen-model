@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import reactTapEventPlugin from 'react-tap-event-plugin'
+// import reactTapEventPlugin from 'react-tap-event-plugin'
 
 // import Main from './components/Main'
 // import List from './components/List'
@@ -8,7 +8,7 @@ import reactTapEventPlugin from 'react-tap-event-plugin'
 // import UnsplashMotion from './components/scaleSlider/UnsplashMotion'
 import LayerUnsplash from './components/scaleSlider/LayerUnsplash'
 
-reactTapEventPlugin()
+// reactTapEventPlugin()
 
 ReactDOM.render((
   <LayerUnsplash />
