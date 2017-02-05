@@ -160,6 +160,8 @@ class PhotoTiltBox extends React.Component {
     let props = this.props
     let states = this.state
 
+    console.log('PhotoTiltBox render')
+
     return (
       <div className='un-photo-slide-li'>
         <div className='un-photo-slide-li-img' onClick={this.handelTilt} ref='tiltImg' style={props.slideImgStyle}></div>

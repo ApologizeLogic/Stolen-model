@@ -407,7 +407,7 @@ class TouchPage extends React.Component {
 }
 
 TouchPage.contextTypes = {
-  imageList: React.PropTypes.array,
+  // imageList: React.PropTypes.array,
   demoData: React.PropTypes.array,
   closePage: React.PropTypes.func,
 }

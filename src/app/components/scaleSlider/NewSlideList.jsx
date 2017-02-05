@@ -29,6 +29,8 @@ class NewSlideList extends React.Component {
 
   render() {
 
+    console.log('NewSlideList render')
+
     let states = this.state
     let props = this.props
     let imageSlide = []

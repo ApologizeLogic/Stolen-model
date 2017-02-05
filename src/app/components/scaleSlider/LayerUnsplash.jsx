@@ -6,23 +6,23 @@ import dataJson from '../../json/demo.js'
 
 import '../../style/layer.scss'
 
-import img1 from '../../images/1.jpeg'
-import img2 from '../../images/2.jpeg'
-import img3 from '../../images/3.jpg'
-import img4 from '../../images/4.jpg'
-import img5 from '../../images/5.jpg'
-import img6 from '../../images/6.jpg'
-import img7 from '../../images/7.jpg'
+// import img1 from '../../images/1.jpeg'
+// import img2 from '../../images/2.jpeg'
+// import img3 from '../../images/3.jpg'
+// import img4 from '../../images/4.jpg'
+// import img5 from '../../images/5.jpg'
+// import img6 from '../../images/6.jpg'
+// import img7 from '../../images/7.jpg'
 
-let imageList = [
-  img1,
-  img2,
-  img3,
-  img4,
-  img5,
-  img6,
-  img7
-]
+// let imageList = [
+//   img1,
+//   img2,
+//   img3,
+//   img4,
+//   img5,
+//   img6,
+//   img7
+// ]
 
 let demoData = dataJson
 
@@ -43,7 +43,7 @@ class LayerUnsplash extends React.Component {
 
   getChildContext() {
     return { 
-      imageList: imageList,
+      // imageList: imageList,
       demoData: demoData,
       closePage: this.handelImageClose,
     }
@@ -80,7 +80,6 @@ class LayerUnsplash extends React.Component {
     return (
       <div className='un-container'>
         <ImageList
-          imageList={imageList}
           demoData={demoData}
           handelImage={this.handelImage}
         >
@@ -100,7 +99,7 @@ class LayerUnsplash extends React.Component {
 }
 
 LayerUnsplash.childContextTypes = {
-  imageList: React.PropTypes.array,
+  // imageList: React.PropTypes.array,
   demoData: React.PropTypes.array,
   closePage: React.PropTypes.func,
 }
